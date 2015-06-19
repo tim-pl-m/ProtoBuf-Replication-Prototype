@@ -1,0 +1,30 @@
+option java_package = "replication.prototype.server.messages";
+option java_outer_classname = "M";
+
+// used for server-to-server-communication
+
+
+enum OperationType {
+	UPDATEORCREATE = 0;
+	READ = 1;
+	DELETE = 3;
+}
+
+message Command {
+	required OperationType operation = 1;
+	required string key = 2;
+	optional string value = 3;
+    optional string initiator = 4;
+
+}
+
+message Response {
+	required OperationType operation = 1;
+	optional string value = 2;
+	required Ack a = 3;
+}
+
+message Ack {
+	optional string message = 1;
+	required bool result = 2;
+}

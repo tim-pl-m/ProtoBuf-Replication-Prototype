@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration
+	xmlns="http://www.ise.tu-berlin.de/AEC/Prototyping/Replication"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="Configuration.xsd ">
+	<replicationpaths>
+		<path start="nodeA">
+			<link src="nodeA" type="sync" target="nodeB" />
+			<link src="nodeB" type="async" target="nodeC" />
+		</path>
+		<path  start="nodeB">
+			<link  xsi:type="QuorumReplicationLinkType" src="nodeB" type="quorum" qsize="1">
+				<qparticipant name="nodeA" />
+				<qparticipant name="nodeC" />
+			</link>
+		</path>
+		<path start="nodeC">
+			<link src="nodeC" type="async" target="nodeA" />
+			<link src="nodeC" type="async" target="nodeB" />
+		</path>
+	</replicationpaths>
+	
+	<replicationnodes>
+	<!--  Private ip of amazon e2c nodes that are mapped to internal ids... -->
+		<node label="nodeA" port="7183" />
+		<node label="nodeB" port="7281" />
+		<node label="nodeC" port="7384" /><!-- Identifikation via Ports -->
+		
+	</replicationnodes>
+</configuration>
