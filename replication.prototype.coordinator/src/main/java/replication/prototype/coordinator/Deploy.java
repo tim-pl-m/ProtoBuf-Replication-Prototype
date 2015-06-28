@@ -70,14 +70,15 @@ public class Deploy {
 
 	public static void main(String[] args) throws Exception {
 
-		try {
+		if (args.length > 0) {
 			if (args[0].equals("local"))
 				System.out.println("set port dependend on xml");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-		}
+		} else
+			deployOnline();
 
+	}
+
+	private static void deployOnline() throws Exception {
 		System.out.println("===========================================");
 		System.out.println("Welcome to the AWS Java SDK!");
 		System.out.println("===========================================");
