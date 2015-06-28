@@ -117,6 +117,10 @@ public class Deploy {
 					+ " Amazon EC2 instance(s).");
 			System.out.println("Your group has " + adresses.size()
 					+ " Amazon EC2 instance(s) running.");
+			if (adresses.size() < 3) {
+				System.out.println("Not Enough!");
+				return;
+			}
 
 			File configFile = new File("src/main/resources/Configuration.xml");
 			JAXBContext jaxbContext;
