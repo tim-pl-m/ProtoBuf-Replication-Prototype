@@ -1,2 +1,0 @@
-2015-06-18 02:20:19.961 [main] INFO  replication.prototype.client.Client - Response of command of type: 'UPDATEORCREATE' for key='test' and value='' was found in input stream
-2015-06-18 02:20:20.020 [main] INFO  replication.prototype.client.Client - Response of command of type: 'READ'' for key='test' and value='someValue' was found in input stream
