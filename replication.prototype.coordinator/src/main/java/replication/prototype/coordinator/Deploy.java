@@ -113,6 +113,34 @@ public class Deploy {
 		}
 
 	}
+	
+	private static void deployNode(NodeType n,
+			ReplicationConfigurationType config) throws IOException {
+		String startUrl = "http://" + n.getIpadress()
+				+ ":8080/startServer/{thisNode}";
+
+		RestTemplate restTemplate = new RestTemplate();
+		// debug: check connection and url-parsing
+		String runningUrl = "http://" + n.getIpadress()
+				+ ":8080/isServerRunning";
+		System.out.println(runningUrl);
+
+		Boolean result = restTemplate.getForObject(runningUrl, Boolean.class);
+		System.out.println(result);
+		if (!result) {
+			System.out.println("Server not running adequat");
+			return;
+		}
+
+		System.out.println(startUrl);
+
+		restTemplate.getMessageConverters().add(
+				new Jaxb2RootElementHttpMessageConverter());
+		result = restTemplate.postForObject(startUrl, config, Boolean.class,
+				n.getLabel());
+		System.out.println("start " + n.getLabel() + " successfull: " + result);
+
+	
 
 	private static void deployOnline() throws Exception {
 		System.out.println("===========================================");
@@ -208,32 +236,6 @@ public class Deploy {
 
 	}
 
-	private static void deployNode(NodeType n,
-			ReplicationConfigurationType config) throws IOException {
-		String startUrl = "http://" + n.getIpadress()
-				+ ":8080/startServer/{thisNode}";
-
-		RestTemplate restTemplate = new RestTemplate();
-		// debug: check connection and url-parsing
-		String runningUrl = "http://" + n.getIpadress()
-				+ ":8080/isServerRunning";
-		System.out.println(runningUrl);
-
-		Boolean result = restTemplate.getForObject(runningUrl, Boolean.class);
-		System.out.println(result);
-		if (!result) {
-			System.out.println("Server not running adequat");
-			return;
-		}
-
-		System.out.println(startUrl);
-
-		restTemplate.getMessageConverters().add(
-				new Jaxb2RootElementHttpMessageConverter());
-		result = restTemplate.postForObject(startUrl, config, Boolean.class,
-				n.getLabel());
-		System.out.println("start " + n.getLabel() + " successfull: " + result);
-
-	}
+}
 
 }
