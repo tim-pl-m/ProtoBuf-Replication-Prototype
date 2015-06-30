@@ -59,6 +59,7 @@ public class StarterController {
 		return true;
 	}
 
+	// TODO delete if not used later
 	public boolean startServerlocally(ReplicationConfigurationType config,
 			String thisNode) {
 		logger.debug("start server {}", thisNode);
@@ -118,11 +119,11 @@ public class StarterController {
 	public static void main(String[] args) throws Exception {
 
 		if (args.length > 0) {
-			if (args[0].equals("local"))
-				System.out.println("set port dependend on xml");
-		} else
+			// if (args[0].equals("local"))
+			// System.out.println("set port dependend on xml");
+			// else
 			SpringApplication.run(StarterController.class, args);
-
+		}
 	}
 
 }

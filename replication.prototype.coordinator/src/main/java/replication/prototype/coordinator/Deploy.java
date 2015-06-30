@@ -72,9 +72,45 @@ public class Deploy {
 
 		if (args.length > 0) {
 			if (args[0].equals("local"))
-				System.out.println("set port dependend on xml");
-		} else
-			deployOnline();
+				// System.out.println("set port dependend on xml");
+				deployOffline();
+			else
+				deployOnline();
+		}
+	}
+
+	private static void deployOffline() throws Exception {
+		File configFile = new File("src/main/resources/ConfigurationLocal.xml");
+		JAXBContext jaxbContext;
+		ReplicationConfigurationType config = null;
+
+		try {
+			jaxbContext = JAXBContext
+					.newInstance(ReplicationConfigurationType.class);
+
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			config = (ReplicationConfigurationType) jaxbUnmarshaller
+					.unmarshal(configFile);
+			int ipcounter = 0;
+			// set addresses of the nodes
+			for (NodeType n : config.getReplicationnodes().getNode()) {
+
+				// n.setIpadress(adresses.get(ipcounter));
+				n.setIpadress("localhost");
+				ipcounter++;
+				System.out
+						.println(n.getLabel() + n.getIpadress() + n.getPort());
+			}
+			// deploy nodes
+			for (NodeType n : config.getReplicationnodes().getNode()) {
+				deployNode(n, config);
+			}
+
+			logger.info("Configuration parsed successfully.");
+		} catch (JAXBException e) {
+			logger.fatal("Configuration could not be parsed.");
+
+		}
 
 	}
 
@@ -182,8 +218,14 @@ public class Deploy {
 		String runningUrl = "http://" + n.getIpadress()
 				+ ":8080/isServerRunning";
 		System.out.println(runningUrl);
+
 		Boolean result = restTemplate.getForObject(runningUrl, Boolean.class);
 		System.out.println(result);
+		if (!result) {
+			System.out.println("Server not running adequat");
+			return;
+		}
+
 		System.out.println(startUrl);
 
 		restTemplate.getMessageConverters().add(
