@@ -74,7 +74,7 @@ public class Deploy {
 			if (args[0].equals("local"))
 				// System.out.println("set port dependend on xml");
 				deployOffline();
-			else
+			if (args[0].equals("online"))
 				deployOnline();
 		}
 	}
