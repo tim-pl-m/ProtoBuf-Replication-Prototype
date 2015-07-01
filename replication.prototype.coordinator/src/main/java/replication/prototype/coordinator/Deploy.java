@@ -71,16 +71,19 @@ public class Deploy {
 	public static void main(String[] args) throws Exception {
 
 		if (args.length > 0) {
-			if (args[0].equals("local"))
-				// System.out.println("set port dependend on xml");
+			if (args[0].equals("local")) {
+				System.out.println("deploy local");
 				deployOffline();
-			if (args[0].equals("online"))
-				deployOnline();
-		}
+			}
+		} else
+			deployOnline();
+
 	}
 
 	private static void deployOffline() throws Exception {
-		File configFile = new File("src/main/resources/ConfigurationLocal.xml");
+		// File configFile = new
+		// File("src/main/resources/ConfigurationLocal.xml");
+		File configFile = new File("src/main/resources/Configuration.xml");
 		JAXBContext jaxbContext;
 		ReplicationConfigurationType config = null;
 
@@ -127,10 +130,10 @@ public class Deploy {
 
 		Boolean result = restTemplate.getForObject(runningUrl, Boolean.class);
 		System.out.println(result);
-		if (!result) {
-			System.out.println("Server not running adequat");
-			return;
-		}
+		// if (!result) {
+		// System.out.println("Server not running adequat");
+		// return;
+		// }
 
 		System.out.println(startUrl);
 
