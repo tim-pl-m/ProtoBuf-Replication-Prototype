@@ -15,13 +15,13 @@ message Command {
 	required string key = 2;
 	optional string value = 3;
     optional string initiator = 4;
-
 }
 
 message Response {
 	required OperationType operation = 1;
 	optional string value = 2;
 	required Ack a = 3;
+	optional string timeStamp = 4;
 }
 
 message Ack {
