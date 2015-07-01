@@ -20,17 +20,37 @@ public class Client {
 	}
 
 	public static void testCreateAndRead() {
-		Socket clientSocket;
+		Socket clientSocket = null;
 		try {
 			// clientSocket = new Socket("localhost", 7081);
-			String address = "ec2-52-17-84-142.eu-west-1.compute.amazonaws.com";
-			// int port = 7183;
+			String address = "ec2-52-18-47-107.eu-west-1.compute.amazonaws.com";
+
+			try {
+				int port = 7183;
+				clientSocket = new Socket(address, port);
+			} catch (Exception e) {
+
+				// e.printStackTrace();
+				logger.info("wrong port");
+			}
 			// nodeA
-			int port = 7281;
+			try {
+				int port = 7281;
+				clientSocket = new Socket(address, port);
+			} catch (Exception e) {
+
+				// e.printStackTrace();
+				logger.info("wrong port");
+			}
 			// nodeB
-			// int port = 7384;
-			// nodeC
-			clientSocket = new Socket(address, port);
+			try {
+				int port = 7384;
+				// nodeC
+				clientSocket = new Socket(address, port);
+			} catch (Exception e) {
+				logger.info("wrong port");
+				// e.printStackTrace();
+			}
 
 			// create builder for 'create request'
 			Command.Builder createBuilder = Command.newBuilder();
