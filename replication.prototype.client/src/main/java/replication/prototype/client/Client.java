@@ -82,7 +82,7 @@ public class Client {
 			logger.info("Response of command of type: '"
 					+ readResponse.getOperation() + "'' for key='"
 					+ readCommand.getKey() + "' and value='"
-					+ readResponse.getValue() + "' was found in input stream");
+					+ readResponse.getValue());
 
 			clientSocket.close();
 
