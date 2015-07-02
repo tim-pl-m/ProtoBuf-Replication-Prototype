@@ -117,13 +117,22 @@ public class StarterController {
 	}
 
 	public static void main(String[] args) throws Exception {
+		// used Arguments:
+		// package
+		// spring-boot:run
+		// -Drun.jvmArguments="-Dserver.port=8081"
+		// -Drun.arguments="local"
+		// so a working maven goal in eclipse is i.e.
+		//
+		// spring-boot:run -Drun.arguments="local"
+		// -Drun.jvmArguments="-Dserver.port=8081"
 
 		if (args.length > 0) {
 			// if (args[0].equals("local"))
 			// System.out.println("set port dependend on xml");
 			// else
 			SpringApplication.run(StarterController.class, args);
+
 		}
 	}
-
 }
