@@ -109,9 +109,10 @@ public class QuorumCommandDispatcher implements ICommandDispatcher {
    * @param qp the participants to create a command dispatcher for, the replication link for the whole quorum
    * @param repLink
    * @return
+   * @throws IOException 
    */
   private SyncCommandDispatcher createSyncCommandDispatcherForQuorumParticipant(
-      QuorumReplicationLinkType.Qparticipant qp, QuorumReplicationLinkType repLink) {
+      QuorumReplicationLinkType.Qparticipant qp, QuorumReplicationLinkType repLink) throws IOException {
 
     ReplicationLinkType adoptedRepLink = new ReplicationLinkType();
     adoptedRepLink.setSrc(repLink.getSrc());

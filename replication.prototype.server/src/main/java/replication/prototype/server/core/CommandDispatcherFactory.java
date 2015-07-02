@@ -1,5 +1,7 @@
 package replication.prototype.server.core;
 
+import java.io.IOException;
+
 import replication.prototype.server.environment.QuorumReplicationLinkType;
 import replication.prototype.server.environment.ReplicationLinkType;
 import replication.prototype.server.util.ReplicationConfigAccessor;
@@ -18,12 +20,12 @@ public class CommandDispatcherFactory implements ICommandDispatcherFactory {
 	}
 	
 	@Override
-	public ICommandDispatcher createSyncDispatcher(ReplicationLinkType repLink) {
+	public ICommandDispatcher createSyncDispatcher(ReplicationLinkType repLink) throws IOException {
 		return new SyncCommandDispatcher(repLink, this.configAccessor);
 	}
 
 	@Override
-	public ICommandDispatcher createAsyncDispatcher(ReplicationLinkType repLink) {
+	public ICommandDispatcher createAsyncDispatcher(ReplicationLinkType repLink) throws IOException {
 		return new AsyncCommandDispatcher(repLink, this.configAccessor);
 	}
 

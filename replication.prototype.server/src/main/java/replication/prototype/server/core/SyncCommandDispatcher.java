@@ -41,7 +41,7 @@ public class SyncCommandDispatcher implements ICommandDispatcher {
 	private ReplicationLinkType repLink;
 
 	public SyncCommandDispatcher(ReplicationLinkType repLink,
-			ReplicationConfigAccessor configAccessor) {
+			ReplicationConfigAccessor configAccessor) throws IOException {
 
 		try {
 			this.repLink = repLink;
@@ -54,6 +54,7 @@ public class SyncCommandDispatcher implements ICommandDispatcher {
 		} catch (IOException e) {
 			logger.error("Error communicating with server with IP-Address "
 					+ targetNode.getIpadress() + ".");
+			throw e;
 		}
 
 	}
@@ -64,6 +65,9 @@ public class SyncCommandDispatcher implements ICommandDispatcher {
 		command.writeDelimitedTo(this.oStream);
 		this.response = Response.parseDelimitedFrom(iStream);
 		logger.debug("Received a response from "+this.targetNode.getLabel());
+		this.oStream.close();
+		this.iStream.close();
+		this.socket.close();
 	}
 
 	@Override

@@ -11,9 +11,8 @@ import replication.prototype.server.messages.M.Response;
 import replication.prototype.server.util.ReplicationConfigAccessor;
 
 /**
- * This class implements the asynchronous replication strategy. It dispatches
- * received commands asynchronously by using the synchronous variant in a
- * thread.
+ *  This class implements the asynchronous replication strategy. It dispatches received commands asynchronously
+ *  by using the synchronous variant in a thread.
  */
 public class AsyncCommandDispatcher implements ICommandDispatcher {
 
@@ -24,24 +23,18 @@ public class AsyncCommandDispatcher implements ICommandDispatcher {
 			.getLogger(AsyncCommandDispatcher.class.getName());
 
 	public AsyncCommandDispatcher(ReplicationLinkType repLink,
-			ReplicationConfigAccessor configAccessor) {
+			ReplicationConfigAccessor configAccessor) throws IOException {
 		this.repLink = repLink;
-		syncCommandDispatcher = new SyncCommandDispatcher(repLink,
+		this.syncCommandDispatcher = new SyncCommandDispatcher(repLink,
 				configAccessor);
 	}
+
 
 	@Override
 	public void dispatchCommand(Command command) throws IOException {
 
-		// the asynchronous implementation simply uses a synchronous command
-		// dispatcher and
-		// invokes it's dispatching functionality within a thread
-		
-		// alternative: create new class
-		// Runnable task = new Thread() ... {
-		
-		// use thread in lambda-notifaction to allow to receive ack without
-		// waiting for it
+	    // the asynchronous implementation simply uses a synchronous command dispatcher and
+	    // invokes it's dispatching functionality within a thread 
 		Runnable task = () -> {
 			try {
 				AsyncCommandDispatcher.this.syncCommandDispatcher
@@ -65,10 +58,10 @@ public class AsyncCommandDispatcher implements ICommandDispatcher {
 		return syncCommandDispatcher.getResponse();
 	}
 
-	@Override
-	public Response[] getResponses() {
-		// Not implemented yet
-		return null;
-	}
+  @Override
+  public Response[] getResponses() {
+    // Not implemented yet
+    return null;
+  }
 
 }

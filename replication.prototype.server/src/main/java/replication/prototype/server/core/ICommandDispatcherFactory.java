@@ -1,5 +1,7 @@
 package replication.prototype.server.core;
 
+import java.io.IOException;
+
 import replication.prototype.server.environment.QuorumReplicationLinkType;
 import replication.prototype.server.environment.ReplicationLinkType;
 
@@ -16,8 +18,9 @@ public interface ICommandDispatcherFactory {
    * 
    * @param the replication link used to dispatch the command
    * @return a synchronous command dispatcher
+   * @throws IOException 
    */
-  public ICommandDispatcher createSyncDispatcher(ReplicationLinkType repLink);
+  public ICommandDispatcher createSyncDispatcher(ReplicationLinkType repLink) throws IOException;
 
   /**
    * Will create an asynchronous command dispatcher
@@ -25,7 +28,7 @@ public interface ICommandDispatcherFactory {
    * @param the replication link used to dispatch the command
    * @return an asynchronous command dispatcher
    */
-  public ICommandDispatcher createAsyncDispatcher(ReplicationLinkType repLink);
+  public ICommandDispatcher createAsyncDispatcher(ReplicationLinkType repLink) throws IOException;
 
   /**
    * Will create a command dispatcher for the quorum mode. @see QuorumCommandDispatcher {@link replication.prototype.server.core.QuorumCommandDispatcher QuorumCommandDispatcher} for the reference implementation.
