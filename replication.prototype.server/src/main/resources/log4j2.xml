@@ -14,9 +14,5 @@
 		<Logger name="replication.prototype.server" level="debug">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Root level="error">
-			<AppenderRef ref="Console" />
-			<AppenderRef ref="MyFile" />
-		</Root>
 	</Loggers>
 </Configuration>

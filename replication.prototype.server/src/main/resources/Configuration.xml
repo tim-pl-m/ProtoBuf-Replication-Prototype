@@ -15,9 +15,14 @@
 			</link>
 		</path>
 		<path start="nodeC">
-			<link src="nodeC" type="async" target="nodeA" />
+			<link src="nodec" type="async" target="nodeA" />
 			<link src="nodeC" type="async" target="nodeB" />
 		</path>
+			<path start="nodeC">
+			<link src="nodec" type="async" target="nodeA" />
+			<link src="nodeC" type="async" target="nodeB" />
+		</path>
+		
 	</replicationpaths>
 	
 	<replicationnodes>
