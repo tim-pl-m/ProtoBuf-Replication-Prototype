@@ -153,6 +153,20 @@ public final class M {
      */
     com.google.protobuf.ByteString
         getInitiatorBytes();
+
+    /**
+     * <code>optional string id = 5;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>optional string id = 5;</code>
+     */
+    java.lang.String getId();
+    /**
+     * <code>optional string id = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
   }
   /**
    * Protobuf type {@code Command}
@@ -233,6 +247,12 @@ public final class M {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000008;
               initiator_ = bs;
+              break;
+            }
+            case 42: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000010;
+              id_ = bs;
               break;
             }
           }
@@ -416,11 +436,54 @@ public final class M {
       }
     }
 
+    public static final int ID_FIELD_NUMBER = 5;
+    private java.lang.Object id_;
+    /**
+     * <code>optional string id = 5;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional string id = 5;</code>
+     */
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          id_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string id = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       operation_ = replication.prototype.server.messages.M.OperationType.UPDATEORCREATE;
       key_ = "";
       value_ = "";
       initiator_ = "";
+      id_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -455,6 +518,9 @@ public final class M {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBytes(4, getInitiatorBytes());
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(5, getIdBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -479,6 +545,10 @@ public final class M {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, getInitiatorBytes());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, getIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -605,6 +675,8 @@ public final class M {
         bitField0_ = (bitField0_ & ~0x00000004);
         initiator_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
+        id_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -649,6 +721,10 @@ public final class M {
           to_bitField0_ |= 0x00000008;
         }
         result.initiator_ = initiator_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.id_ = id_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -681,6 +757,11 @@ public final class M {
         if (other.hasInitiator()) {
           bitField0_ |= 0x00000008;
           initiator_ = other.initiator_;
+          onChanged();
+        }
+        if (other.hasId()) {
+          bitField0_ |= 0x00000010;
+          id_ = other.id_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -977,6 +1058,82 @@ public final class M {
   }
   bitField0_ |= 0x00000008;
         initiator_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object id_ = "";
+      /**
+       * <code>optional string id = 5;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string id = 5;</code>
+       */
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            id_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string id = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string id = 5;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string id = 5;</code>
+       */
+      public Builder clearId() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string id = 5;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        id_ = value;
         onChanged();
         return this;
       }
@@ -2355,14 +2512,15 @@ public final class M {
   static {
     java.lang.String[] descriptorData = {
       "\n%main/resources/messageProtocoll.proto\"" +
-      "[\n\007Command\022!\n\toperation\030\001 \002(\0162\016.Operatio" +
+      "g\n\007Command\022!\n\toperation\030\001 \002(\0162\016.Operatio" +
       "nType\022\013\n\003key\030\002 \002(\t\022\r\n\005value\030\003 \001(\t\022\021\n\tini" +
-      "tiator\030\004 \001(\t\"M\n\010Response\022!\n\toperation\030\001 " +
-      "\002(\0162\016.OperationType\022\r\n\005value\030\002 \001(\t\022\017\n\001a\030" +
-      "\003 \002(\0132\004.Ack\"&\n\003Ack\022\017\n\007message\030\001 \001(\t\022\016\n\006r" +
-      "esult\030\002 \002(\010*9\n\rOperationType\022\022\n\016UPDATEOR" +
-      "CREATE\020\000\022\010\n\004READ\020\001\022\n\n\006DELETE\020\003B*\n%replic" +
-      "ation.prototype.server.messagesB\001M"
+      "tiator\030\004 \001(\t\022\n\n\002id\030\005 \001(\t\"M\n\010Response\022!\n\t" +
+      "operation\030\001 \002(\0162\016.OperationType\022\r\n\005value" +
+      "\030\002 \001(\t\022\017\n\001a\030\003 \002(\0132\004.Ack\"&\n\003Ack\022\017\n\007messag" +
+      "e\030\001 \001(\t\022\016\n\006result\030\002 \002(\010*9\n\rOperationType" +
+      "\022\022\n\016UPDATEORCREATE\020\000\022\010\n\004READ\020\001\022\n\n\006DELETE" +
+      "\020\003B*\n%replication.prototype.server.messa" +
+      "gesB\001M"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2381,7 +2539,7 @@ public final class M {
     internal_static_Command_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Command_descriptor,
-        new java.lang.String[] { "Operation", "Key", "Value", "Initiator", });
+        new java.lang.String[] { "Operation", "Key", "Value", "Initiator", "Id", });
     internal_static_Response_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Response_fieldAccessorTable = new
