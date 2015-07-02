@@ -2,6 +2,7 @@ package replication.prototype.coordinator;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -94,19 +95,21 @@ public class Deploy {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			config = (ReplicationConfigurationType) jaxbUnmarshaller
 					.unmarshal(configFile);
-			int ipcounter = 0;
+
 			// set addresses of the nodes
 			for (NodeType n : config.getReplicationnodes().getNode()) {
 
-				// n.setIpadress(adresses.get(ipcounter));
 				n.setIpadress("localhost");
-				ipcounter++;
+
 				System.out
 						.println(n.getLabel() + n.getIpadress() + n.getPort());
 			}
 			// deploy nodes
+			int[] portArray = { 8081, 8082, 8083 };
+			int portCounter = 0;
 			for (NodeType n : config.getReplicationnodes().getNode()) {
-				deployNode(n, config);
+				deployNode(n, config, portArray[portCounter]);
+				portCounter++;
 			}
 
 			logger.info("Configuration parsed successfully.");
@@ -118,14 +121,14 @@ public class Deploy {
 	}
 
 	private static void deployNode(NodeType n,
-			ReplicationConfigurationType config) throws IOException {
-		String startUrl = "http://" + n.getIpadress()
-				+ ":8080/startServer/{thisNode}";
+			ReplicationConfigurationType config, int port) throws IOException {
+		String startUrl = "http://" + n.getIpadress() + ":" + port
+				+ "/startServer/{thisNode}";
 
 		RestTemplate restTemplate = new RestTemplate();
 		// debug: check connection and url-parsing
-		String runningUrl = "http://" + n.getIpadress()
-				+ ":8080/isServerRunning";
+		String runningUrl = "http://" + n.getIpadress() + ":" + port
+				+ "/isServerRunning";
 		System.out.println(runningUrl);
 
 		Boolean result = restTemplate.getForObject(runningUrl, Boolean.class);
@@ -210,18 +213,18 @@ public class Deploy {
 						.createUnmarshaller();
 				config = (ReplicationConfigurationType) jaxbUnmarshaller
 						.unmarshal(configFile);
-				int ipcounter = 0;
+				int ipCounter = 0;
 				// set addresses of the nodes
 				for (NodeType n : config.getReplicationnodes().getNode()) {
 
-					n.setIpadress(adresses.get(ipcounter));
-					ipcounter++;
+					n.setIpadress(adresses.get(ipCounter));
+					ipCounter++;
 					System.out.println(n.getLabel() + n.getIpadress()
 							+ n.getPort());
 				}
 				// deploy nodes
 				for (NodeType n : config.getReplicationnodes().getNode()) {
-					deployNode(n, config);
+					deployNode(n, config, 8080);
 				}
 
 				logger.info("Configuration parsed successfully.");
