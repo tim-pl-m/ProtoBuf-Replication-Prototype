@@ -26,7 +26,7 @@ public class StarterController {
 			.getName());
 	private Server server = null;
 
-	@RequestMapping(value = "/startServer/{thisNode}", method = RequestMethod.POST, produces = "application/xml", consumes = "application/xml")
+	@RequestMapping(value = "/startServer/{thisNode}", method = RequestMethod.POST, produces = "application/json", consumes = "application/xml")
 	public boolean startServer(
 			@RequestBody ReplicationConfigurationType config,
 			@PathVariable String thisNode) {
@@ -59,37 +59,7 @@ public class StarterController {
 		return true;
 	}
 
-	// TODO delete if not used later
-	public boolean startServerlocally(ReplicationConfigurationType config,
-			String thisNode) {
-		logger.debug("start server {}", thisNode);
-		try {
-			if (this.server != null) {
-				logger.debug("Another server instance seems to be running.");
 
-				try {
-					this.server.shutDown();
-				} catch (InterruptedException e) {
-					logger.fatal("Another instance of a server is already running. This instance could not have been stopped.");
-					return false;
-
-				}
-				logger.debug("That instance has been stopped.");
-			}
-
-			this.server = new Server(config, thisNode);
-			this.server.boot();
-
-		} catch (UnknownHostException | UnknownIdentityException e) {
-			logger.fatal("The server's identity could not be determined");
-			return false;
-		} catch (IOException e) {
-			logger.fatal("Fatal communication error. Application is no longer runnable.");
-			return false;
-		}
-
-		return true;
-	}
 
 	@RequestMapping(value = "/deploy/{mode}")
 	public boolean deploy(@RequestBody ReplicationConfigurationType rep,
