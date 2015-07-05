@@ -24,16 +24,19 @@ public class Client {
 
 	static String address = "localhost";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		testPort();
-		testCreateAndRead();
-		int iterations = 1000;
+		createOperation();
+		readOperation();
+		int iterations = 100;
 		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < iterations; i++) {
-			testCreateAndRead();
+			createOperation();
 		}
-		long estimatedTime = System.currentTimeMillis() - startTime;
-		System.out.println("estimatedTime:" + estimatedTime);
+		long runTime = System.currentTimeMillis() - startTime;
+		System.out.println("runTime:" + runTime);
+
+		clientSocket.close();
 	}
 
 	public static void getAdress() {
@@ -69,7 +72,34 @@ public class Client {
 		}
 	}
 
-	public static void testCreateAndRead() {
+	public static void readOperation() {
+		try {
+
+			// create builder for 'read request'
+			Command.Builder readBuilder = Command.newBuilder();
+			readBuilder.setOperation(OperationType.READ);
+			readBuilder.setKey("test");
+			Command readCommand = readBuilder.build();
+			readCommand.writeDelimitedTo(clientSocket.getOutputStream());
+
+			M.Response readResponse = M.Response
+					.parseDelimitedFrom(clientSocket.getInputStream());
+
+			logger.info("Response of command of type: '"
+					+ readResponse.getOperation() + "'' for key='"
+					+ readCommand.getKey() + "' and value='"
+					+ readResponse.getValue());
+
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void createOperation() {
 
 		try {
 
@@ -89,23 +119,6 @@ public class Client {
 					+ createResponse.getOperation() + "' for key='"
 					+ createCommand.getKey() + "' and value='"
 					+ createResponse.getValue() + "' was found in input stream");
-
-			// create builder for 'read request'
-			Command.Builder readBuilder = Command.newBuilder();
-			readBuilder.setOperation(OperationType.READ);
-			readBuilder.setKey("test");
-			Command readCommand = readBuilder.build();
-			readCommand.writeDelimitedTo(clientSocket.getOutputStream());
-
-			M.Response readResponse = M.Response
-					.parseDelimitedFrom(clientSocket.getInputStream());
-
-			logger.info("Response of command of type: '"
-					+ readResponse.getOperation() + "'' for key='"
-					+ readCommand.getKey() + "' and value='"
-					+ readResponse.getValue());
-
-			clientSocket.close();
 
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
