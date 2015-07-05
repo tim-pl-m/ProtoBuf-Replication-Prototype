@@ -28,9 +28,12 @@ public class Client {
 		testPort();
 		testCreateAndRead();
 		int iterations = 1000;
-		// for (int i = 0; i < iterations; i++) {
-		// testCreateAndRead();
-		// }
+		long startTime = System.currentTimeMillis();
+		for (int i = 0; i < iterations; i++) {
+			testCreateAndRead();
+		}
+		long estimatedTime = System.currentTimeMillis() - startTime;
+		System.out.println("estimatedTime:" + estimatedTime);
 	}
 
 	public static void getAdress() {
