@@ -9,8 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import replication.prototype.server.Server;
 import replication.prototype.server.environment.NodeType;
@@ -19,6 +23,7 @@ import replication.prototype.server.messages.M;
 import replication.prototype.server.messages.M.Command;
 import replication.prototype.server.messages.M.OperationType;
 import replication.prototype.server.messages.M.Response;
+import replication.prototype.server.util.CommitLogEventCreator;
 
 /**
  * The reference implementation of {@link replication.prototype.server.core.ICommandReceiver
@@ -32,16 +37,20 @@ public class CommandReceiver implements ICommandReceiver {
   private Map<String, String> map;
   private NodeType thisNode;
   private List<ReplicationLinkType> thisReplicationLinks;
+  
+  static final Marker SQL_MARKER = MarkerManager.getMarker("COMMIT");
   static final Logger logger = LogManager.getLogger(CommandReceiver.class.getName());
+  private CommitLogEventCreator commitLogEventCreator;
   private boolean shutdownHook = false;
 
   public CommandReceiver(NodeType thisNode, Map<String, String> map, Server currentServer)
-      throws IOException {
+      throws IOException, JAXBException {
     this.thisNode = thisNode;
     this.thisReplicationLinks = currentServer.getReplicationPath().getLink();
     this.socket = new ServerSocket(thisNode.getPort());
     this.map = map;
     this.currentServer = currentServer;
+    this.commitLogEventCreator = new CommitLogEventCreator();
   }
 
   /**
@@ -76,6 +85,9 @@ public class CommandReceiver implements ICommandReceiver {
 
     if (!command.getOperation().equals(OperationType.READ)) {
       this.map.put(command.getKey(), (command.hasValue()) ? command.getValue() : null);
+      
+      logger.info(this.commitLogEventCreator.createCommitLogEvent(command, this.currentServer).toCsv());
+     
       logger.debug("Command is sent to the coordinator");
 
       CommandCoordinator coordinator =
