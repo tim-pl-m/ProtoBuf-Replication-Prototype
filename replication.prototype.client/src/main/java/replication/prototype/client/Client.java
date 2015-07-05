@@ -21,10 +21,14 @@ public class Client {
 
 	static Socket clientSocket = null;
 
-	// static String address =
-	// "ec2-52-18-47-107.eu-west-1.compute.amazonaws.com";
+	// static String address = "";
 
-	static String address = "localhost";
+	// static String adress =
+	// "ec2-52-74-244-146.ap-southeast-1.compute.amazonaws.com";
+	// singapore
+	static String address = "ec2-52-18-30-81.eu-west-1.compute.amazonaws.com"; // ireland
+
+	// static String address = "localhost";
 
 	public static void main(String[] args) throws IOException {
 		testPort();

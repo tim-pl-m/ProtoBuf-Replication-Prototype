@@ -41,6 +41,9 @@ public class Deploy {
 
 	static AmazonEC2 ec2;
 
+	static Set<Instance> instances = new HashSet<Instance>();
+	static List<String> adresses = new ArrayList<String>();
+
 	private static void init() throws Exception {
 
 		/*
@@ -50,8 +53,8 @@ public class Deploy {
 		 */
 		AWSCredentials credentials = null;
 		try {
-			credentials = new ProfileCredentialsProvider(
-					"New EU West (Ireland) Profile").getCredentials();
+			credentials = new ProfileCredentialsProvider("AEC")
+					.getCredentials();
 		} catch (Exception e) {
 			throw new AmazonClientException(
 					"Cannot load the credentials from the credential profiles file. "
@@ -63,8 +66,6 @@ public class Deploy {
 		// s3 = new AmazonS3Client(credentials);
 		// sdb = new AmazonSimpleDBClient(credentials);
 
-		Region r = Region.getRegion(Regions.EU_WEST_1);
-		ec2.setRegion(r);
 	}
 
 	// login to AWS
@@ -148,6 +149,42 @@ public class Deploy {
 
 	}
 
+	private static void getInstanceAdressesForRegion() {
+		DescribeAvailabilityZonesResult availabilityZonesResult = ec2
+				.describeAvailabilityZones();
+		System.out.println("You have access to "
+				+ availabilityZonesResult.getAvailabilityZones().size()
+				+ " Availability Zones.");
+
+		DescribeInstancesResult describeInstancesRequest = ec2
+				.describeInstances();
+		List<Reservation> reservations = describeInstancesRequest
+				.getReservations();
+
+		for (Reservation reservation : reservations) {
+			instances.addAll(reservation.getInstances());
+
+		}
+		for (Instance i : instances) {
+			String keyName = i.getKeyName();
+			if (keyName != null && keyName.equals("aec-group-2")) {
+				System.out.println("-----");
+				System.out.println(i.getState());
+				System.out.println(i.getKeyName());
+				System.out.println(i.getPrivateDnsName());
+
+				System.out.println(i.getPrivateIpAddress());
+
+				System.out.println(i.getPublicIpAddress());
+				System.out.println(i.getPublicDnsName());
+
+				System.out.println("-----");
+				adresses.add(i.getPublicDnsName());
+			}
+		}
+
+	}
+
 	private static void deployOnline() throws Exception {
 		System.out.println("===========================================");
 		System.out.println("Welcome to the AWS Java SDK!");
@@ -156,41 +193,20 @@ public class Deploy {
 		init();
 
 		try {
-			DescribeAvailabilityZonesResult availabilityZonesResult = ec2
-					.describeAvailabilityZones();
-			System.out.println("You have access to "
-					+ availabilityZonesResult.getAvailabilityZones().size()
-					+ " Availability Zones.");
+			Region r = Region.getRegion(Regions.EU_WEST_1);
+			ec2.setRegion(r);
 
-			DescribeInstancesResult describeInstancesRequest = ec2
-					.describeInstances();
-			List<Reservation> reservations = describeInstancesRequest
-					.getReservations();
+			getInstanceAdressesForRegion();
 
-			Set<Instance> instances = new HashSet<Instance>();
-			List<String> adresses = new ArrayList<String>();
+			r = Region.getRegion(Regions.SA_EAST_1);
+			ec2.setRegion(r);
 
-			for (Reservation reservation : reservations) {
-				instances.addAll(reservation.getInstances());
+			getInstanceAdressesForRegion();
 
-			}
-			for (Instance i : instances) {
-				String keyName = i.getKeyName();
-				if (keyName != null && keyName.equals("aec-group-2")) {
-					System.out.println("-----");
-					System.out.println(i.getState());
-					System.out.println(i.getKeyName());
-					System.out.println(i.getPrivateDnsName());
+			r = Region.getRegion(Regions.US_EAST_1);
+			ec2.setRegion(r);
 
-					System.out.println(i.getPrivateIpAddress());
-
-					System.out.println(i.getPublicIpAddress());
-					System.out.println(i.getPublicDnsName());
-
-					System.out.println("-----");
-					adresses.add(i.getPublicDnsName());
-				}
-			}
+			getInstanceAdressesForRegion();
 
 			System.out.println("There are " + instances.size()
 					+ " Amazon EC2 instance(s).");
