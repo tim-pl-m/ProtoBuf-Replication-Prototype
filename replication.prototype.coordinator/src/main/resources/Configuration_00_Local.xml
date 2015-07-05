@@ -21,9 +21,9 @@
 
 	<replicationnodes>
 		<!-- Private ip of amazon e2c nodes that are mapped to internal ids... -->
-		<node label="nodeA" port="7183" webserverport="8081"/>
-		<node label="nodeB" port="7281" webserverport="8082" />
-		<node label="nodeC" port="7384" webserverport="8083"/><!-- Identifikation via Ports -->
+		<node label="nodeA" ipadress="localhost" port="7183" webserverport="8081"/>
+		<node label="nodeB" ipadress="localhost" port="7281" webserverport="8082" />
+		<node label="nodeC" ipadress="localhost" port="7384" webserverport="8083"/><!-- Identifikation via Ports -->
 
 	</replicationnodes>
 </configuration>

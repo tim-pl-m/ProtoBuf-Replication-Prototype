@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -42,7 +43,6 @@ public class DeployHelper {
   static final Logger logger = LogManager.getLogger(DeployHelper.class.getName());
   static final String s = System.getProperty("file.separator");
   private AmazonEC2 ec2;
-
   /**
    * This class variable stores all addresses of available e2c regions per region.
    */
@@ -66,21 +66,14 @@ public class DeployHelper {
 
     DeployHelper helper = null;
 
-    if (args.length > 1) {
-      helper = new DeployHelper("src" + s + "main" + s + "resources" + s + "" + args[1]);
+    if (args.length > 0) {
+      helper = new DeployHelper("src" + s + "main" + s + "resources" + s + "" + args[0]);
     } else {
       helper = new DeployHelper();
     }
     helper.generalInitializatiom();
+    helper.deploy();
 
-    if (args.length > 0 && args[0].equals("local")) {
-      System.out.println("deploy local");
-      helper.deployOffline();
-
-    } else {
-      System.out.println("deploy remotely");
-      helper.deployOnline();
-    }
 
   }
 
@@ -123,21 +116,7 @@ public class DeployHelper {
 
   }
 
-  /**
-   * 
-   * @throws Exception
-   */
-  private void deployOffline() throws Exception {
 
-    for (NodeType n : this.config.getReplicationnodes().getNode()) {
-      n.setIpadress("localhost");
-    }
-    for (NodeType n : config.getReplicationnodes().getNode()) {
-      deployNode(n, config, n.getWebserverport());
-    }
-
-
-  }
 
   /**
    * 
@@ -202,26 +181,33 @@ public class DeployHelper {
 
   }
 
-  private void deployOnline() throws Exception {
-    this.initializationForOnlineDeployment();
+  private void deploy() throws Exception {
+    if (this.config.getReplicationnodes().getNode().stream().anyMatch(n -> n.getIpadress() == null)) {
+      this.initializationForOnlineDeployment();
+
+    }
     logger.debug("Config file is {}", this.filePath);
     Region currentRegion = null;
 
     try {
-      for (NodeType n : config.getReplicationnodes().getNode()) {
+      for (NodeType n : config.getReplicationnodes().getNode().stream()
+          .filter(n -> n.getIpadress() == null).collect(Collectors.toList())) {
 
+        n.setWebserverport(8080);
         logger.debug("Node region is {}", n.getLocation());
 
         currentRegion = Region.getRegion(Regions.valueOf(n.getLocation().name()));
         ec2.setRegion(currentRegion);
+
         getInstanceAdressesForRegion(currentRegion);
         n.setIpadress(this.getNextIpAddress(currentRegion).getPublicDnsName());
-        logger.debug("Node with label {} will have public DNS {} and listening on port {}", n.getLabel(), n.getIpadress(), n.getPort());
+        logger.debug("Node with label {} will have public DNS {} and listening on port {}",
+            n.getLabel(), n.getIpadress(), n.getPort());
 
       }
       // deploy nodes
       for (NodeType n : config.getReplicationnodes().getNode()) {
-        deployNode(n, config, 8080);
+        deployNode(n, config, n.getWebserverport());
       }
 
 
