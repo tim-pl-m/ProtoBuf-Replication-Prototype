@@ -17,6 +17,8 @@ public class Client {
 
 	static int port = 0;
 
+	static int id = 0;
+
 	static Socket clientSocket = null;
 
 	// static String address =
@@ -32,9 +34,10 @@ public class Client {
 		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < iterations; i++) {
 			createOperation();
+			System.out.println("sent operation:" + id++);
 		}
 		long runTime = System.currentTimeMillis() - startTime;
-		System.out.println("runTime:" + runTime);
+		System.out.println("runTime:" + runTime + " Milliseconds");
 
 		clientSocket.close();
 	}
@@ -108,6 +111,7 @@ public class Client {
 			createBuilder.setOperation(OperationType.UPDATEORCREATE);
 			createBuilder.setKey("test");
 			createBuilder.setValue("someValue");
+			createBuilder.setId(Integer.toString(id));
 			Command createCommand = createBuilder.build();
 			createCommand.writeDelimitedTo(clientSocket.getOutputStream());
 
