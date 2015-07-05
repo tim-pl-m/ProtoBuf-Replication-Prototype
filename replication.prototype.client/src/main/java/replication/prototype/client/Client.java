@@ -27,6 +27,10 @@ public class Client {
 	public static void main(String[] args) {
 		testPort();
 		testCreateAndRead();
+		int iterations = 1000;
+		// for (int i = 0; i < iterations; i++) {
+		// testCreateAndRead();
+		// }
 	}
 
 	public static void getAdress() {
@@ -65,7 +69,6 @@ public class Client {
 	public static void testCreateAndRead() {
 
 		try {
-			// clientSocket = new Socket("localhost", 7081);
 
 			// create builder for 'create request'
 			Command.Builder createBuilder = Command.newBuilder();
