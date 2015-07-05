@@ -1,12 +1,17 @@
 package replication.prototype.server.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.UnknownHostException;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,6 +87,19 @@ public class StarterController {
     }
     return true;
   }
+
+ 
+
+  @RequestMapping(value = "/getCurrentCommitLog", method = RequestMethod.GET)
+  public void getFile(HttpServletResponse response)
+      throws IOException {
+
+    InputStream is = new FileInputStream("commits.log");
+    IOUtils.copy(is, response.getOutputStream());
+    response.flushBuffer();
+  }
+
+
 
   public static void main(String[] args) throws Exception {
 

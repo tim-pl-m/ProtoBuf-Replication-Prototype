@@ -22,9 +22,11 @@
 	</xs:complexType>
 
 	<xs:complexType name="NodeType">
-		<xs:attribute name="label" use="required" type="xs:string"/>
-		<xs:attribute name="ipadress" type="xs:string"/>
-		<xs:attribute name="port" type="xs:int"/>
+		<xs:attribute name="label" use="required" type="xs:string" />
+		<xs:attribute name="ipadress" type="xs:string" />
+		<xs:attribute name="port" type="xs:int" />
+		<xs:attribute name="location" type="AwsLocationEnumType" />
+		
 	</xs:complexType>
 
 	<xs:complexType name="ReplicationPathConfigurationType">
@@ -72,5 +74,14 @@
 	</xs:simpleType>
 
 
+	<xs:simpleType name="AwsLocationEnumType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EU_WEST_1" />
+			<xs:enumeration value="US_EAST_1" />
+			<xs:enumeration value="US_WEST_1" />
+			<xs:enumeration value="SA_EAST_1" />
+
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>
  

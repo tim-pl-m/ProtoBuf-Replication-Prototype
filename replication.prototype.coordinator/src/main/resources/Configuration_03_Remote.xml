@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="http://www.ise.tu-berlin.de/AEC/Prototyping/Replication"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+
+	<replicationpaths>
+		<path start="nodeA">
+			<link src="nodeA"  xsi:type="QuorumReplicationLinkType"  type="quorum" qsize="2">
+				<qparticipant name="nodeB" />
+				<qparticipant name="nodeC" />
+				<qparticipant name="nodeD" />
+			</link>
+		</path>
+		<path start="nodeB">
+			<link src="nodeB"  xsi:type="QuorumReplicationLinkType"  type="quorum" qsize="2">
+				<qparticipant name="nodeA" />
+				<qparticipant name="nodeC" />
+				<qparticipant name="nodeD" />
+			</link>
+		</path>
+		<path start="nodeC">
+			<link src="nodeC"  xsi:type="QuorumReplicationLinkType"  type="quorum" qsize="2">
+				<qparticipant name="nodeA" />
+				<qparticipant name="nodeB" />
+				<qparticipant name="nodeD" />
+			</link>
+		</path>
+		<path start="nodeD">
+			<link src="nodeD"  xsi:type="QuorumReplicationLinkType"  type="quorum" qsize="2">
+				<qparticipant name="nodeA" />
+				<qparticipant name="nodeB" />
+				<qparticipant name="nodeC" />
+			</link>
+		</path>
+	</replicationpaths>
+
+	<replicationnodes>
+		<!-- Private ip of amazon e2c nodes that are mapped to internal ids... -->
+		<node label="nodeA" location="EU_WEST_1" />
+		<node label="nodeB" location="US_EAST_1" />
+		<node label="nodeC" location="US_WEST_1" />
+		<node label="nodeD" location="SA_EAST_1" />
+	</replicationnodes>
+</configuration>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="http://www.ise.tu-berlin.de/AEC/Prototyping/Replication"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<replicationpaths>
+	<path start="nodeA">
+		<link src="nodeA" type="async" target="nodeB"/>
+		<link src="nodeB" type="async" target="nodeC"/>
+		<link src="nodeC" type="async" target="nodeD"/>
+	</path>
+</replicationpaths>
+
+	<replicationnodes>
+		<!-- Private ip of amazon e2c nodes that are mapped to internal ids... -->
+		<node label="nodeA" location="EU_WEST_1" />
+		<node label="nodeB" location="US_EAST_1" />
+		<node label="nodeC" location="US_WEST_1" />
+		<node label="nodeD" location="SA_EAST_1" />
+	</replicationnodes>
+</configuration>
