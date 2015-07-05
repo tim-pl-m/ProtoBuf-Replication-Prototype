@@ -15,42 +15,55 @@ public class Client {
 
 	static final Logger logger = LogManager.getLogger(Client.class.getName());
 
+	static int port = 0;
+
+	static Socket clientSocket = null;
+
+	static String address = null;
+
 	public static void main(String[] args) {
-		Client.testCreateAndRead();
+		testPort();
+		testCreateAndRead();
+	}
+
+	public static void getAdress() {
+
+	}
+
+	public static void testPort() {
+		try {
+			port = 7183;
+			clientSocket = new Socket(address, port);
+		} catch (Exception e) {
+
+			// e.printStackTrace();
+			logger.info("wrong port");
+		}
+		// nodeA
+		try {
+			port = 7281;
+			clientSocket = new Socket(address, port);
+		} catch (Exception e) {
+
+			// e.printStackTrace();
+			logger.info("wrong port");
+		}
+		// nodeB
+		try {
+			int port = 7384;
+			// nodeC
+			clientSocket = new Socket(address, port);
+		} catch (Exception e) {
+			logger.info("wrong port");
+			// e.printStackTrace();
+		}
 	}
 
 	public static void testCreateAndRead() {
-		Socket clientSocket = null;
+
 		try {
 			// clientSocket = new Socket("localhost", 7081);
-			String address = "ec2-52-18-47-107.eu-west-1.compute.amazonaws.com";
-
-			try {
-				int port = 7183;
-				clientSocket = new Socket(address, port);
-			} catch (Exception e) {
-
-				// e.printStackTrace();
-				logger.info("wrong port");
-			}
-			// nodeA
-			try {
-				int port = 7281;
-				clientSocket = new Socket(address, port);
-			} catch (Exception e) {
-
-				// e.printStackTrace();
-				logger.info("wrong port");
-			}
-			// nodeB
-			try {
-				int port = 7384;
-				// nodeC
-				clientSocket = new Socket(address, port);
-			} catch (Exception e) {
-				logger.info("wrong port");
-				// e.printStackTrace();
-			}
+			address = "ec2-52-18-47-107.eu-west-1.compute.amazonaws.com";
 
 			// create builder for 'create request'
 			Command.Builder createBuilder = Command.newBuilder();
@@ -94,5 +107,4 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-
 }
