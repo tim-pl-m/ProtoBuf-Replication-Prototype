@@ -19,7 +19,10 @@ public class Client {
 
 	static Socket clientSocket = null;
 
-	static String address = null;
+	// static String address =
+	// "ec2-52-18-47-107.eu-west-1.compute.amazonaws.com";
+
+	static String address = "localhost";
 
 	public static void main(String[] args) {
 		testPort();
@@ -63,7 +66,6 @@ public class Client {
 
 		try {
 			// clientSocket = new Socket("localhost", 7081);
-			address = "ec2-52-18-47-107.eu-west-1.compute.amazonaws.com";
 
 			// create builder for 'create request'
 			Command.Builder createBuilder = Command.newBuilder();
