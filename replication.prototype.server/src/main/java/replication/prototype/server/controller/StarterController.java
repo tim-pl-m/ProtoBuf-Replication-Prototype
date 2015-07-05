@@ -3,11 +3,12 @@ package replication.prototype.server.controller;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,87 +23,75 @@ import replication.prototype.server.environment.UnknownIdentityException;
 @EnableAutoConfiguration
 public class StarterController {
 
-	static final Logger logger = LogManager.getLogger(StarterController.class
-			.getName());
-	private Server server = null;
+  static final Logger logger = LogManager.getLogger(StarterController.class.getName());
+  private Server server = null;
 
-	@RequestMapping(value = "/startServer/{thisNode}", method = RequestMethod.POST, produces = "application/json", consumes = "application/xml")
-	public boolean startServer(
-			@RequestBody ReplicationConfigurationType config,
-			@PathVariable String thisNode) {
-		logger.debug("Received request to start server {}", thisNode);
-		try {
-			if (this.server != null) {
-				logger.debug("Another server instance seems to be running.");
+  @RequestMapping(value = "/startServer/{thisNode}", method = RequestMethod.POST,
+      produces = "application/json", consumes = "application/xml")
+  public boolean startServer(@RequestBody ReplicationConfigurationType config,
+      @PathVariable String thisNode) {
+    logger.debug("Received request to start server {}", thisNode);
+    try {
+      if (this.server != null) {
+        logger.debug("Another server instance seems to be running.");
 
-				try {
-					this.server.shutDown();
-				} catch (InterruptedException e) {
-					logger.fatal("Another instance of a server is already running. This instance could not have been stopped.");
-					return false;
+        try {
+          this.server.shutDown();
+        } catch (InterruptedException e) {
+          logger
+              .fatal("Another instance of a server is already running. This instance could not have been stopped.");
+          return false;
 
-				}
-				logger.debug("That instance has been stopped.");
-			}
+        }
+        logger.debug("That instance has been stopped.");
+      }
 
-			this.server = new Server(config, thisNode);
-			this.server.boot();
+      this.server = new Server(config, thisNode);
+      this.server.boot();
 
-		} catch (UnknownHostException | UnknownIdentityException e) {
-			logger.fatal("The server's identity could not be determined");
-			return false;
-		} catch (IOException e) {
-			logger.fatal("Fatal communication error. Application is no longer runnable.");
-			return false;
-		}
+    } catch (UnknownHostException | UnknownIdentityException e) {
+      logger.fatal("The server's identity could not be determined");
+      return false;
+    } catch (IOException e) {
+      logger.fatal("Fatal communication error. Application is no longer runnable.");
+      return false;
+    } catch (JAXBException e) {
+      logger.error("Error while marshalling business objects.");
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
 
 
-	@RequestMapping(value = "/deploy/{mode}")
-	public boolean deploy(@RequestBody ReplicationConfigurationType rep,
-			String mode) {
-		return false;
-	}
+  @RequestMapping(value = "/deploy/{mode}")
+  public boolean deploy(@RequestBody ReplicationConfigurationType rep, String mode) {
+    return false;
+  }
 
-	@RequestMapping(value = "/isServerRunning")
-	public boolean isServerRunning() {
-		logger.debug("Request for server's state");
-		return this.server != null;
-	}
+  @RequestMapping(value = "/isServerRunning")
+  public boolean isServerRunning() {
+    logger.debug("Request for server's state");
+    return this.server != null;
+  }
 
-	@RequestMapping(value = "/shutDownServer")
-	public boolean shutdownServer() {
-		if (this.server != null) {
-			try {
-				return this.server.shutDown();
-			} catch (InterruptedException e) {
-				logger.fatal("The server could not be stopped.    ");
-				return false;
-			}
-		}
-		return true;
-	}
+  @RequestMapping(value = "/shutDownServer")
+  public boolean shutdownServer() {
+    if (this.server != null) {
+      try {
+        return this.server.shutDown();
+      } catch (InterruptedException e) {
+        logger.fatal("The server could not be stopped.    ");
+        return false;
+      }
+    }
+    return true;
+  }
 
-	public static void main(String[] args) throws Exception {
-		// used Arguments:
-		// package
-		// spring-boot:run
-		// -Drun.jvmArguments="-Dserver.port=8081"
-		// -Drun.arguments="local"
-		// so a working maven goal in eclipse is i.e.
-		//
-		// spring-boot:run -Drun.arguments="local"
-		// -Drun.jvmArguments="-Dserver.port=8081"
+  public static void main(String[] args) throws Exception {
 
-		if (args.length > 0) {
-			// if (args[0].equals("local"))
-			// System.out.println("set port dependend on xml");
-			// else
-			SpringApplication.run(StarterController.class, args);
+    SpringApplication.run(StarterController.class, args);
 
-		}
-	}
+  }
 }

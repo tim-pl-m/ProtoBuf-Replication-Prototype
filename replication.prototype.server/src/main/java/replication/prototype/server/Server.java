@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,8 +55,9 @@ public class Server {
    * @throws UnknownIdentityException will be thrown if there is no replication path found for the
    *         specified node
    * @throws IOException will be thrown, if socket communication fails
+   * @throws JAXBException 
    */
-  public void boot() throws UnknownIdentityException, IOException {
+  public void boot() throws UnknownIdentityException, IOException, JAXBException {
     this.determineServersIdentity();
     // depends on server's identity and availability of config objects --> don't change order
     this.configAccessor =
@@ -103,8 +106,9 @@ public class Server {
    * receiver processes incoming commands according to the respective replication path.
    * 
    * @throws IOException
+   * @throws JAXBException 
    */
-  private void buildAndRunCommandReceiver() throws IOException {
+  private void buildAndRunCommandReceiver() throws IOException, JAXBException {
     this.receiver =
         new CommandReceiver(this.identity.getServerIdentity(), this.synchrnoizedMap, this);
 
