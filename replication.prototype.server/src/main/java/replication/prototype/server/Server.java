@@ -117,6 +117,7 @@ public class Server {
     };
 
     this.receiverThread = new Thread(task);
+    this.receiverThread.setDaemon(true);
     this.receiverThread.start();
   }
 

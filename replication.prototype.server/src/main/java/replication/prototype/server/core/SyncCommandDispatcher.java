@@ -15,8 +15,8 @@ import replication.prototype.server.messages.M.Response;
 import replication.prototype.server.util.ReplicationConfigAccessor;
 
 /**
- * 
- * @author tayfun.wiechert
+ * Synchronous implementation of the ICommandDispatcher interface that streams the given command to a TCP output stream.
+ * When a response is received, the used socket will be closed and the process of dispatching terminates.
  *
  */
 public class SyncCommandDispatcher implements ICommandDispatcher {
@@ -47,7 +47,8 @@ public class SyncCommandDispatcher implements ICommandDispatcher {
 			this.repLink = repLink;
 			targetNode = configAccessor.getNodeByLabel(repLink.getTarget()
 					.toString());
-			socket = new Socket(targetNode.getIpadress(), targetNode.getPort());
+			this.socket = new Socket(targetNode.getIpadress(), targetNode.getPort());
+			this.socket.setReuseAddress(true);
 			this.oStream = socket.getOutputStream();
 			this.iStream = socket.getInputStream();
 
@@ -64,7 +65,7 @@ public class SyncCommandDispatcher implements ICommandDispatcher {
 
 		command.writeDelimitedTo(this.oStream);
 		this.response = Response.parseDelimitedFrom(iStream);
-		logger.debug("Received a response from "+this.targetNode.getLabel());
+		logger.debug("Received a response from {}", this.targetNode.getLabel());
 		this.oStream.close();
 		this.iStream.close();
 		this.socket.close();

@@ -64,12 +64,6 @@ public class StarterController {
   }
 
 
-
-  @RequestMapping(value = "/deploy/{mode}")
-  public boolean deploy(@RequestBody ReplicationConfigurationType rep, String mode) {
-    return false;
-  }
-
   @RequestMapping(value = "/isServerRunning")
   public boolean isServerRunning() {
     logger.debug("Request for server's state");

@@ -38,7 +38,7 @@ public class CommandReceiver implements ICommandReceiver {
   private NodeType thisNode;
   private List<ReplicationLinkType> thisReplicationLinks;
   
-  static final Marker SQL_MARKER = MarkerManager.getMarker("COMMIT");
+  static final Marker COMMIT_MARKER = MarkerManager.getMarker("COMMIT");
   static final Logger logger = LogManager.getLogger(CommandReceiver.class.getName());
   private CommitLogEventCreator commitLogEventCreator;
   private boolean shutdownHook = false;
@@ -86,7 +86,7 @@ public class CommandReceiver implements ICommandReceiver {
     if (!command.getOperation().equals(OperationType.READ)) {
       this.map.put(command.getKey(), (command.hasValue()) ? command.getValue() : null);
       
-      logger.info(this.commitLogEventCreator.createCommitLogEvent(command, this.currentServer).toCsv());
+      logger.info(COMMIT_MARKER, this.commitLogEventCreator.createCommitLogEvent(command, this.currentServer).toCsv());
      
       logger.debug("Command is sent to the coordinator");
 
@@ -173,10 +173,11 @@ public class CommandReceiver implements ICommandReceiver {
 
                 command = Command.parseDelimitedFrom(iStream);
                 if (command != null) {
-
-                  logger.debug("New command found: " + command.toString());
+                  
+                  logger.debug("New command found: {}", command.toString());
                   Response resp = CommandReceiver.this.handleCommand(command);
-                  logger.debug("Will now respond to requester: " + resp.toString());
+                  logger.debug("Will now respond to requester: {} ", resp.toString());
+                  
                   resp.writeDelimitedTo(oStream);
                   logger.debug("Response successfully sent to the requester.");
                 }
@@ -217,7 +218,9 @@ public class CommandReceiver implements ICommandReceiver {
           }
         };
 
-        new Thread(threadForSocketConnection).run();
+        Thread tfsc = new Thread(threadForSocketConnection);
+        tfsc.setDaemon(true);
+        tfsc.run();
 
         // if has received shutdown hook, close the whole server socket
         // the loop can terminate then
