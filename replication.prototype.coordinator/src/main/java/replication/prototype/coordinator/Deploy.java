@@ -113,7 +113,7 @@ public class Deploy {
 		}
 
 	}
-	
+
 	private static void deployNode(NodeType n,
 			ReplicationConfigurationType config) throws IOException {
 		String startUrl = "http://" + n.getIpadress()
@@ -140,7 +140,7 @@ public class Deploy {
 				n.getLabel());
 		System.out.println("start " + n.getLabel() + " successfull: " + result);
 
-	
+	}
 
 	private static void deployOnline() throws Exception {
 		System.out.println("===========================================");
@@ -235,7 +235,5 @@ public class Deploy {
 		}
 
 	}
-
-}
 
 }
