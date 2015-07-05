@@ -15,6 +15,7 @@ public class CommitLogEventCreator {
   public CommitLogEventCreator() throws JAXBException {
     JAXBContext jc = JAXBContext.newInstance(CommitLogEvent.class);
     this.marshaller = jc.createMarshaller();
+    this.marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
   }
 
   public CommitLogEvent createCommitLogEvent(Command cmd, Server serv) {

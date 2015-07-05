@@ -86,7 +86,7 @@ public class CommandReceiver implements ICommandReceiver {
     if (!command.getOperation().equals(OperationType.READ)) {
       this.map.put(command.getKey(), (command.hasValue()) ? command.getValue() : null);
       
-      logger.info(COMMIT_MARKER, this.commitLogEventCreator.createCommitLogEvent(command, this.currentServer).toCsv());
+      logger.info(COMMIT_MARKER, this.commitLogEventCreator.createCommitLogEvent(command, this.currentServer).toXml());
      
       logger.debug("Command is sent to the coordinator");
 

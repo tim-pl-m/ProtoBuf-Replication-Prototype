@@ -14,6 +14,7 @@ import replication.prototype.server.messages.M.Command;
 
 public class CommitLogEvent {
 
+
   private String node;
   private String commandId;
   private Date timestamp;
@@ -48,4 +49,37 @@ public class CommitLogEvent {
     return sw.toString();
 
   }
+  
+  public String getNode() {
+    return node;
+  }
+
+  public void setNode(String node) {
+    this.node = node;
+  }
+
+  public String getCommandId() {
+    return commandId;
+  }
+
+  public void setCommandId(String commandId) {
+    this.commandId = commandId;
+  }
+
+  public Date getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  public String getOperation() {
+    return operation;
+  }
+
+  public void setOperation(String operation) {
+    this.operation = operation;
+  }
+
 }
