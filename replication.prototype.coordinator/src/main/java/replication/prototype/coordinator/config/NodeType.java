@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// �nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2015.07.05 um 09:37:52 PM CEST 
+// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2015.07.05 um 11:55:30 PM CEST 
 //
 
 
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse f�r NodeType complex type.
+ * <p>Java-Klasse für NodeType complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="label" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="ipadress" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="port" type="{http://www.w3.org/2001/XMLSchema}int" />
+ *       &lt;attribute name="webserverport" type="{http://www.w3.org/2001/XMLSchema}int" />
  *       &lt;attribute name="location" type="{http://www.ise.tu-berlin.de/AEC/Prototyping/Replication}AwsLocationEnumType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -44,6 +45,8 @@ public class NodeType {
     protected String ipadress;
     @XmlAttribute(name = "port")
     protected Integer port;
+    @XmlAttribute(name = "webserverport")
+    protected Integer webserverport;
     @XmlAttribute(name = "location")
     protected AwsLocationEnumType location;
 
@@ -117,6 +120,30 @@ public class NodeType {
      */
     public void setPort(Integer value) {
         this.port = value;
+    }
+
+    /**
+     * Ruft den Wert der webserverport-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getWebserverport() {
+        return webserverport;
+    }
+
+    /**
+     * Legt den Wert der webserverport-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setWebserverport(Integer value) {
+        this.webserverport = value;
     }
 
     /**

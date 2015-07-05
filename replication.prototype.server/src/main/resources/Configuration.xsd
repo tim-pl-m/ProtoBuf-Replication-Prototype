@@ -25,8 +25,9 @@
 		<xs:attribute name="label" use="required" type="xs:string" />
 		<xs:attribute name="ipadress" type="xs:string" />
 		<xs:attribute name="port" type="xs:int" />
+		<xs:attribute name="webserverport" type="xs:int" />
 		<xs:attribute name="location" type="AwsLocationEnumType" />
-		
+
 	</xs:complexType>
 
 	<xs:complexType name="ReplicationPathConfigurationType">
@@ -79,9 +80,16 @@
 			<xs:enumeration value="EU_WEST_1" />
 			<xs:enumeration value="US_EAST_1" />
 			<xs:enumeration value="US_WEST_1" />
+			<xs:enumeration value="US_WEST_2" />
+			<xs:enumeration value="AP_SOUTHEAST_1" />
+			<xs:enumeration value="AP_SOUTHEAST_2" />
+			<xs:enumeration value="AP_NORTHEAST_1" />
+			<xs:enumeration value="CN_NORTH_1" />
 			<xs:enumeration value="SA_EAST_1" />
-
+			<xs:enumeration value="EU_CENTRAL_1" />
 		</xs:restriction>
+
+
 	</xs:simpleType>
 </xs:schema>
  
