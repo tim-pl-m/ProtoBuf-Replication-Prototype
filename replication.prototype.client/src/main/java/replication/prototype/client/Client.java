@@ -20,20 +20,11 @@ public class Client {
 	static final Logger logger = LogManager.getLogger(Client.class.getName());
 	static final Marker LATENCY_MARKER = MarkerManager.getMarker("LATENCY");
 
-	static int port = 7183;
-
 	static Socket clientSocket = null;
-
-	// static String address = "";
-
-	// static String adress =
-	// "ec2-52-74-244-146.ap-southeast-1.compute.amazonaws.com";
-	// singapore
-	// static String address =
-	// "ec2-52-18-30-81.eu-west-1.compute.amazonaws.com"; // ireland
-	static String address = "localhost"; // ireland
-
 	static Date begin = null;
+	static int port = 0;
+
+	static String address = "ec2-52-18-62-238.eu-west-1.compute.amazonaws.com"; // ireland
 
 	// static String address = "localhost";
 
@@ -86,6 +77,17 @@ public class Client {
 		} catch (Exception e) {
 			logger.info("wrong port");
 			// e.printStackTrace();
+		}
+		// node C
+		try {
+			int port = 7484;
+			// nodeC
+			clientSocket = new Socket(address, port);
+		} catch (Exception e) {
+			logger.info("wrong port");
+			// e.printStackTrace();
+
+			// node D
 		}
 	}
 
