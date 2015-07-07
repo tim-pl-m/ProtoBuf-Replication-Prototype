@@ -82,7 +82,7 @@ public class CommandCoordinator implements ICommandCoordinator {
                 command.toString());
 
           }
-          
+
           // the dispatchCommand method is provided by the general interface ICommandDispatcher and
           // can therefore be used independent from a specific implementation/strategy
           dispatcher.dispatchCommand(CommandCoordinator.this.rebuildCommand(command));
@@ -108,6 +108,10 @@ public class CommandCoordinator implements ICommandCoordinator {
     Command.Builder builder = Command.newBuilder();
     builder.setOperation(command.getOperation());
     builder.setKey(command.getKey());
+    if (command.hasId()) {
+      builder.setId(command.getId());
+
+    }
     if (command.hasValue())
       builder.setValue(command.getValue());
 

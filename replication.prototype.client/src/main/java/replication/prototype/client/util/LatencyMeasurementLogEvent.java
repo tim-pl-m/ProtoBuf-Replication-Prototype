@@ -30,12 +30,12 @@ public class LatencyMeasurementLogEvent {
 
   public long getDuration()
   {
-    return this.timestampBegin.getTime() - this.timestampEnd.getTime(); 
+    return this.timestampEnd.getTime() - this.timestampBegin.getTime(); 
   }
   
   public String toCsv()
   {
-    return this.commandId+", "+this.timestampBegin+", "+this.timestampEnd+", "+this.getDuration();
+    return this.commandId+", "+this.timestampEnd.getTime()+", "+this.timestampBegin.getTime()+", "+this.getDuration();
   }
   
 }

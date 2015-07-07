@@ -9,7 +9,6 @@
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 		<File name="CommitFileLogger" fileName="commits.log" append="false">
-			<XMLLayout complete="true" charset="UTF-8" compact="false" />
 			<MarkerFilter marker="COMMIT" onMatch="ACCEPT"
 				onMismatch="DENY" />
 		</File>

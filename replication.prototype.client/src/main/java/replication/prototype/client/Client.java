@@ -19,7 +19,7 @@ public class Client {
   static final Logger logger = LogManager.getLogger(Client.class.getName());
   static final Marker LATENCY_MARKER = MarkerManager.getMarker("LATENCY");
 
-  static int port = 0;
+  static int port = 7183;
 
 
   static Socket clientSocket = null;
@@ -29,7 +29,8 @@ public class Client {
   // static String adress =
   // "ec2-52-74-244-146.ap-southeast-1.compute.amazonaws.com";
   // singapore
-  static String address = "ec2-52-18-30-81.eu-west-1.compute.amazonaws.com"; // ireland
+  //static String address = "ec2-52-18-30-81.eu-west-1.compute.amazonaws.com"; // ireland
+  static String address = "localhost"; // ireland
 
   // static String address = "localhost";
 
@@ -37,7 +38,7 @@ public class Client {
     testPort();
     executeCreateOperation("test");
     executeReadOperation();
-    int iterations = 100;
+    int iterations = 500;
     long startTime = System.currentTimeMillis();
 
     for (int i = 0; i < iterations; i++) {
