@@ -24,12 +24,14 @@ public class Client {
 	static Date begin = null;
 	static int port = 0;
 
-	static String address = "ec2-52-18-62-238.eu-west-1.compute.amazonaws.com"; // ireland
+	static String address = "";
 
 	// static String address = "localhost";
 
 	public static void main(String[] args) throws IOException {
 		testPort();
+		address = args[0];
+
 		// executeCreateOperation("test");
 		executeReadOperation();
 		int iterations = 500;
@@ -39,7 +41,7 @@ public class Client {
 		for (int i = 0; i < iterations; i++) {
 
 			executeCreateOperation("id:" + Integer.toString(i));
-
+			// wait
 		}
 		long runTime = System.currentTimeMillis() - startTime;
 		System.out.println("runTime:" + runTime + " Milliseconds");
