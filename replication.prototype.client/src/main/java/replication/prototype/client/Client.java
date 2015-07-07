@@ -25,23 +25,31 @@ public class Client {
 	static int port = 0;
 
 	static String address = "";
+	static int iterations = 500;
+	static int amountThreads = 8;
+	static int opsPerThread = iterations % amountThreads;
 
 	// static String address = "localhost";
 
 	public static void main(String[] args) throws IOException {
 
 		address = args[0];
+		// int amountThreads = args[1];
 		testPort();
 		// executeCreateOperation("test");
 		executeReadOperation();
-		int iterations = 500;
-		long startTime = System.currentTimeMillis();
 
+		long startTime = System.currentTimeMillis();
 		begin = new java.util.Date();
-		for (int i = 0; i < iterations; i++) {
-			// TODO parallelisierung für last(i.e. strategie3)
-			executeCreateOperation("id:" + Integer.toString(i));
-			// wait
+		for (int i = 0; i < amountThreads; i++) {
+			final int currentI = i;
+			Runnable task = () -> {
+				for (int j = currentI * opsPerThread; j < currentI + 1; j++) {
+					// executeCreateOperation("id:" + Integer.toString(i));
+					executeCreateOperation("id:" + Integer.toString(j++));
+				}
+			};
+			new Thread(task).start();
 		}
 		long runTime = System.currentTimeMillis() - startTime;
 		System.out.println("runTime:" + runTime + " Milliseconds");
