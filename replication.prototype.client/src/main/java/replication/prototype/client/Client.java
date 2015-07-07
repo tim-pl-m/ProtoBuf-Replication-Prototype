@@ -26,9 +26,12 @@ public class Client {
 
 	static String address = "";
 
+	static long breakInMilliseconds = 1000;
+
 	// static String address = "localhost";
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException,
+			InterruptedException {
 
 		address = args[0];
 		testPort();
@@ -41,7 +44,7 @@ public class Client {
 		for (int i = 0; i < iterations; i++) {
 			// TODO parallelisierung für last(i.e. strategie3)
 			executeCreateOperation("id:" + Integer.toString(i));
-			// wait
+			Thread.sleep(breakInMilliseconds);
 		}
 		long runTime = System.currentTimeMillis() - startTime;
 		System.out.println("runTime:" + runTime + " Milliseconds");
