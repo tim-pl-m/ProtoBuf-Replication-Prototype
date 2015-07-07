@@ -8,19 +8,13 @@
 		<link src="nodeB" type="async" target="nodeC"/>
 		<link src="nodeC" type="async" target="nodeD"/>
 	</path>
-</replicationpaths>
-<replicationpaths>
 	<path start="nodeB">
 		<link src="nodeA" type="async" target="nodeB"/>
 	</path>
-</replicationpaths>
-<replicationpaths>
 	<path start="nodeC">
 		<link src="nodeA" type="async" target="nodeB"/>
 	</path>
-</replicationpaths>
-<replicationpaths>
-	<path start="nodeD">
+		<path start="nodeD">
 		<link src="nodeA" type="async" target="nodeB"/>
 	</path>
 </replicationpaths>
