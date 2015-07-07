@@ -29,9 +29,9 @@ public class Client {
 	// static String address = "localhost";
 
 	public static void main(String[] args) throws IOException {
-		testPort();
-		address = args[0];
 
+		address = args[0];
+		testPort();
 		// executeCreateOperation("test");
 		executeReadOperation();
 		int iterations = 500;
@@ -39,7 +39,7 @@ public class Client {
 
 		begin = new java.util.Date();
 		for (int i = 0; i < iterations; i++) {
-
+			// TODO parallelisierung für last(i.e. strategie3)
 			executeCreateOperation("id:" + Integer.toString(i));
 			// wait
 		}
@@ -127,7 +127,10 @@ public class Client {
 			// create builder for 'create request'
 			Command.Builder createBuilder = Command.newBuilder();
 			createBuilder.setOperation(OperationType.UPDATEORCREATE);
-			createBuilder.setKey("test");
+			// with hash, but seems to make no difference
+			// createBuilder.setKey("test" + id);
+			createBuilder.setKey(Integer.toString(Integer.toString(
+					(int) Math.floor((Math.random() * 500) + 1)).hashCode()));
 			createBuilder.setValue("someValue");
 			createBuilder.setId(id);
 			Command createCommand = createBuilder.build();
