@@ -35,6 +35,7 @@ public class StarterController {
   @RequestMapping(value = "/setOffset", method = RequestMethod.POST, produces = "application/json",
       consumes = "application/json")
   public boolean setOffset(@RequestBody long offset) {
+    logger.debug("Setting server's offset to {}", offset);
     this.timeOffset = offset;
     return true;
   }

@@ -6,14 +6,19 @@
 	<path start="nodeA">
 		<link src="nodeA" type="async" target="nodeB"/>
 		<link src="nodeB" type="async" target="nodeC"/>
-		<link src="nodeC" type="async" target="nodeD"/>
 	</path>
+			<path start="nodeB">
+			<link src="nodeA" type="sync" target="nodeB" />
+		</path>
+		<path start="nodeC">
+			<link src="nodeA" type="sync" target="nodeB" />
+		</path>
+	
 </replicationpaths>
 	<replicationnodes>
 		<!-- Private ip of amazon e2c nodes that are mapped to internal ids... -->
 		<node label="nodeA" ipadress="localhost" port="7183"  webserverport="8081" />
 		<node label="nodeB" ipadress="localhost" port="7281"  webserverport="8082" />
 		<node label="nodeC" ipadress="localhost" port="7384"  webserverport="8083" />
-		<node label="nodeD" ipadress="localhost" port="7484"  webserverport="8084" />
 	</replicationnodes>
 </configuration>

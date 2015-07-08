@@ -36,7 +36,6 @@ public class CommandReceiver implements ICommandReceiver {
   private ServerSocket socket;
   private Map<String, String> map;
   private NodeType thisNode;
-  private List<ReplicationLinkType> thisReplicationLinks;
 
   static final Marker COMMIT_MARKER = MarkerManager.getMarker("COMMIT");
   static final Logger logger = LogManager.getLogger(CommandReceiver.class.getName());
@@ -45,7 +44,6 @@ public class CommandReceiver implements ICommandReceiver {
   public CommandReceiver(NodeType thisNode, Map<String, String> map, Server currentServer)
       throws IOException, JAXBException {
     this.thisNode = thisNode;
-    this.thisReplicationLinks = currentServer.getReplicationPath().getLink();
     this.socket = new ServerSocket(thisNode.getPort());
     this.map = map;
     this.currentServer = currentServer;
@@ -134,7 +132,7 @@ public class CommandReceiver implements ICommandReceiver {
           .collect(Collectors.toList());
     } else {
       logger.debug("Our own replication path will be used.");
-      return this.thisReplicationLinks.stream()
+      return this. currentServer.getReplicationPath().getLink().stream()
           .filter(t -> t.getSrc().equals(this.thisNode.getLabel())).collect(Collectors.toList());
     }
   }
@@ -185,7 +183,7 @@ public class CommandReceiver implements ICommandReceiver {
 
                 if (command == null) {
                   logger.debug("Closing Socket because connection has died.");
-
+                  canShutdownIn = true;
                   // connection has dies
                   this.connectionSocketInner.close();
                   // if has received shutdown hook, the specific connection via sockets will be
