@@ -37,11 +37,10 @@ public class CommandReceiver implements ICommandReceiver {
   private Map<String, String> map;
   private NodeType thisNode;
   private List<ReplicationLinkType> thisReplicationLinks;
-  
+
   static final Marker COMMIT_MARKER = MarkerManager.getMarker("COMMIT");
   static final Logger logger = LogManager.getLogger(CommandReceiver.class.getName());
   private CommitLogEventCreator commitLogEventCreator;
-  private boolean shutdownHook = false;
 
   public CommandReceiver(NodeType thisNode, Map<String, String> map, Server currentServer)
       throws IOException, JAXBException {
@@ -85,9 +84,12 @@ public class CommandReceiver implements ICommandReceiver {
 
     if (!command.getOperation().equals(OperationType.READ)) {
       this.map.put(command.getKey(), (command.hasValue()) ? command.getValue() : null);
-      
-      logger.info(COMMIT_MARKER, this.commitLogEventCreator.createCommitLogEvent(command, this.currentServer).toCsv());
-     
+
+      logger.info(
+          COMMIT_MARKER,
+          this.commitLogEventCreator.createCommitLogEvent(command, this.currentServer,
+              this.currentServer.getTimeOffset()).toCsv());
+
       logger.debug("Command is sent to the coordinator");
 
       CommandCoordinator coordinator =
@@ -139,10 +141,9 @@ public class CommandReceiver implements ICommandReceiver {
 
   @Override
   public void startListening() {
-    boolean canShutdown = false;
 
     // outer loop for creating socket connections to several clients
-    while (true && !canShutdown) {
+    while (true) {
 
       try (Socket connectionSocket = this.socket.accept()) {
 
@@ -173,11 +174,11 @@ public class CommandReceiver implements ICommandReceiver {
 
                 command = Command.parseDelimitedFrom(iStream);
                 if (command != null) {
-                  
+
                   logger.debug("New command found: {}", command.toString());
                   Response resp = CommandReceiver.this.handleCommand(command);
                   logger.debug("Will now respond to requester: {} ", resp.toString());
-                  
+
                   resp.writeDelimitedTo(oStream);
                   logger.debug("Response successfully sent to the requester.");
                 }
@@ -187,13 +188,8 @@ public class CommandReceiver implements ICommandReceiver {
 
                   // connection has dies
                   this.connectionSocketInner.close();
-                  canShutdownIn = true;
                   // if has received shutdown hook, the specific connection via sockets will be
                   // closed
-                } else if (CommandReceiver.this.shutdownHook) {
-                  logger.debug("Closing Socket because of shutdown hook.");
-                  this.connectionSocketInner.close();
-                  canShutdownIn = true;
                 }
 
               } catch (IOException e) {
@@ -222,26 +218,13 @@ public class CommandReceiver implements ICommandReceiver {
         tfsc.setDaemon(true);
         tfsc.run();
 
-        // if has received shutdown hook, close the whole server socket
-        // the loop can terminate then
-        if (this.shutdownHook) {
-          this.socket.close();
-          canShutdown = true;
-        }
 
       } catch (IOException e1) {
         logger.error("Error accepting socket.");
-        canShutdown = true;
       }
     }
 
-
-
   }
 
-  @Override
-  public void setShutdownHook() {
-    this.shutdownHook = true;
-  }
 
 }

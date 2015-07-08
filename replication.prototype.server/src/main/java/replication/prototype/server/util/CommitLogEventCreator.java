@@ -18,8 +18,8 @@ public class CommitLogEventCreator {
     this.marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
   }
 
-  public CommitLogEvent createCommitLogEvent(Command cmd, Server serv) {
-    return new CommitLogEvent(cmd, serv, this.marshaller);
+  public CommitLogEvent createCommitLogEvent(Command cmd, Server serv, long offset) {
+    return new CommitLogEvent(cmd, serv, this.marshaller, offset);
   }
 
 }

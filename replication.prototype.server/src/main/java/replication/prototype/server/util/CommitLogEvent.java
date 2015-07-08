@@ -20,17 +20,19 @@ public class CommitLogEvent {
   private Date timestamp;
   private String operation;
   private Marshaller ma;
-
-  public CommitLogEvent(Command cm, Server sv, Marshaller ma) {
+  private long offset;
+  
+  public CommitLogEvent(Command cm, Server sv, Marshaller ma, long offset) {
     this.node = sv.getIdentity().getServerIdentity().getLabel();
     this.commandId = cm.getId();
     this.timestamp = new java.util.Date();
     this.operation = cm.getOperation().name();
     this.ma = ma;
+    this.offset = offset;
   }
 
   public String toCsv() {
-    return this.node + ", " + this.commandId + ", " + this.timestamp + ", " + this.operation;
+    return this.node + ", " + this.commandId + ", " + this.timestamp.getTime() + this.offset + ", " + this.operation;
   }
 
   public String toXml() {

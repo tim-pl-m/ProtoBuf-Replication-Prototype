@@ -43,10 +43,12 @@ public class Server {
   private String nodeLabel;
   private ICommandReceiver receiver;
   private Thread receiverThread;
-
-  public Server(ReplicationConfigurationType config, String nodeLabel) {
+  private long timeOffset = 0;
+  
+  public Server(ReplicationConfigurationType config, String nodeLabel, long timeOffset) {
     this.config = config;
     this.nodeLabel = nodeLabel;
+    this.timeOffset = timeOffset;
   }
 
   /**
@@ -66,6 +68,13 @@ public class Server {
     this.determineServersReplicationPath();
     this.buildAndRunCommandReceiver();
     this.hasBooted = true;
+  }
+  
+  public void rebootWithNewConfig()
+  {
+    this.configAccessor =
+        new ReplicationConfigAccessor(this.config, this.identity.getServerIdentity());
+    this.determineServersReplicationPath();
   }
 
   /**
@@ -104,16 +113,20 @@ public class Server {
    * This method is responsible for creating the command receiver for this server @see
    * {@link replication.prototype.server.core.ICommandReceiver ICommandReceiver}. The command
    * receiver processes incoming commands according to the respective replication path.
-   * 
-   * @throws IOException
    * @throws JAXBException 
+   * @throws IOException 
+   * @throws Exception 
    */
   private void buildAndRunCommandReceiver() throws IOException, JAXBException {
     this.receiver =
         new CommandReceiver(this.identity.getServerIdentity(), this.synchrnoizedMap, this);
 
     Runnable task = () -> {
-      receiver.startListening();
+      try {
+        receiver.startListening();
+      } catch (Exception e) {
+        logger.fatal(e);
+      }
     };
 
     this.receiverThread = new Thread(task);
@@ -127,6 +140,14 @@ public class Server {
    */
   public ReplicationConfigurationType getConfig() {
     return config;
+  }
+  
+  /**
+   * 
+   * @return the configuration passed as constructor parameter
+   */
+  public void setConfig(ReplicationConfigurationType config) {
+     this.config = config;
   }
 
   /**
@@ -157,15 +178,11 @@ public class Server {
     return this.hasBooted;
   }
 
-  public boolean shutDown() throws InterruptedException {
-    if (this.hasBooted) {
-      this.receiver.setShutdownHook();
-      Thread.sleep(300);
-      if (this.receiverThread.isAlive()) {
-        return false;
-      }
-    }
-    return true;
+
+  
+  public long getTimeOffset()
+  {
+    return this.timeOffset;
   }
 
 

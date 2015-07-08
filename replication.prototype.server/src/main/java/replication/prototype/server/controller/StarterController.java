@@ -1,6 +1,5 @@
 package replication.prototype.server.controller;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +28,23 @@ import replication.prototype.server.environment.UnknownIdentityException;
 public class StarterController {
 
   static final Logger logger = LogManager.getLogger(StarterController.class.getName());
+  private long timeOffset = 0;
   private Server server = null;
+
+
+  @RequestMapping(value = "/setOffset", method = RequestMethod.POST, produces = "application/json",
+      consumes = "application/json")
+  public boolean setOffset(@RequestBody long offset) {
+    this.timeOffset = offset;
+    return true;
+  }
+
+  @RequestMapping(value = "/getCurrentTime", method = RequestMethod.GET,
+      produces = "application/json")
+  public long setOffset() {
+    return new java.util.Date().getTime();
+  }
+
 
   @RequestMapping(value = "/startServer/{thisNode}", method = RequestMethod.POST,
       produces = "application/json", consumes = "application/xml")
@@ -39,26 +54,20 @@ public class StarterController {
     try {
       if (this.server != null) {
         logger.debug("Another server instance seems to be running.");
-
-        try {
-          this.server.shutDown();
-        } catch (InterruptedException e) {
-          logger
-              .fatal("Another instance of a server is already running. This instance could not have been stopped.");
-          return false;
-
-        }
-        logger.debug("That instance has been stopped.");
+        this.server.setConfig(config);
+        this.server.rebootWithNewConfig();
+      } else {
+        this.server = new Server(config, thisNode, this.timeOffset);
+        this.server.boot();
       }
 
-      this.server = new Server(config, thisNode);
-      this.server.boot();
+
 
     } catch (UnknownHostException | UnknownIdentityException e) {
       logger.fatal("The server's identity could not be determined");
       return false;
     } catch (IOException e) {
-      logger.fatal("Fatal communication error. Application is no longer runnable.");
+      logger.fatal("Fatal communication error. Application is no longer runnable {}.", e);
       return false;
     } catch (JAXBException e) {
       logger.error("Error while marshalling business objects.");
@@ -75,24 +84,10 @@ public class StarterController {
     return this.server != null;
   }
 
-  @RequestMapping(value = "/shutDownServer")
-  public boolean shutdownServer() {
-    if (this.server != null) {
-      try {
-        return this.server.shutDown();
-      } catch (InterruptedException e) {
-        logger.fatal("The server could not be stopped.    ");
-        return false;
-      }
-    }
-    return true;
-  }
 
- 
 
   @RequestMapping(value = "/getCurrentCommitLog", method = RequestMethod.GET)
-  public void getFile(HttpServletResponse response)
-      throws IOException {
+  public void getFile(HttpServletResponse response) throws IOException {
 
     InputStream is = new FileInputStream("commits.log");
     IOUtils.copy(is, response.getOutputStream());

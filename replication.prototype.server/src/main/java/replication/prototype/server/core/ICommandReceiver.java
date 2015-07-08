@@ -21,13 +21,8 @@ public interface ICommandReceiver {
    * (Creates and) Listens on the input stream for incoming commands.
    * This method loops indefinitely
    */
-  public void startListening();
+  public void startListening() throws Exception;
   
-  
-  /**
-   * Instructs the command receiver to shutdown in order to close the socket and stop receiving commands.
-   */
-  public void setShutdownHook();
   
 
 

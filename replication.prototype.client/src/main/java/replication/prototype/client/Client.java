@@ -17,152 +17,152 @@ import replication.prototype.server.messages.M.OperationType;
 
 public class Client {
 
-	static final Logger logger = LogManager.getLogger(Client.class.getName());
-	static final Marker LATENCY_MARKER = MarkerManager.getMarker("LATENCY");
+    static final Logger logger = LogManager.getLogger(Client.class.getName());
+    static final Marker LATENCY_MARKER = MarkerManager.getMarker("LATENCY");
 
-	static Socket clientSocket = null;
-	static Date begin = null;
-	static int port = 0;
+    static Socket clientSocket = null;
+    static Date begin = null;
+    static int port = 0;
 
-	static String address = "localhost";
+    static String address = "localhost";
 
-	static long breakInMilliseconds = 0;
+    static long breakInMilliseconds = 0;
 
-	public static void main(String[] args) throws IOException,
-			InterruptedException {
+    public static void main(String[] args) throws IOException,
+            InterruptedException {
 
-		try {
-			address = args[0];
-			breakInMilliseconds = Long.parseLong(args[1]);
-		} catch (Exception e) {
-			System.out.println("incomplete arguments");
-			// e.printStackTrace();
-		}
-		testPort();
-		// executeCreateOperation("test");
-		// executeReadOperation();
-		int iterations = 500;
-		long startTime = System.currentTimeMillis();
+        try {
+            address = args[0];
+            breakInMilliseconds = Long.parseLong(args[1]);
+        } catch (Exception e) {
+            System.out.println("incomplete arguments");
+            // e.printStackTrace();
+        }
+        testPort();
+        // executeCreateOperation("test");
+        // executeReadOperation();
+        int iterations = 500;
+        long startTime = System.currentTimeMillis();
 
-		begin = new java.util.Date();
-		for (int i = 0; i < iterations; i++) {
-			// TODO parallelisierung für last(i.e. strategie3)
-			executeCreateOperation("id:" + Integer.toString(i));
-			Thread.sleep(breakInMilliseconds);
-		}
-		long runTime = System.currentTimeMillis() - startTime;
-		System.out.println("runTime:" + runTime + " Milliseconds");
+        begin = new java.util.Date();
+        for (int i = 0; i < iterations; i++) {
+            // TODO parallelisierung für last(i.e. strategie3)
+            executeCreateOperation("id:" + Integer.toString(i));
+            Thread.sleep(breakInMilliseconds);
+        }
+        long runTime = System.currentTimeMillis() - startTime;
+        System.out.println("runTime:" + runTime + " Milliseconds");
 
-		clientSocket.close();
-	}
+        clientSocket.close();
+    }
 
-	public static void getAdress() {
+    public static void getAdress() {
 
-	}
+    }
 
-	public static void testPort() {
-		try {
-			port = 7183;
-			clientSocket = new Socket(address, port);
-		} catch (Exception e) {
+    public static void testPort() {
+        try {
+            port = 7183;
+            clientSocket = new Socket(address, port);
+        } catch (Exception e) {
 
-			// e.printStackTrace();
-			logger.info("wrong port");
-		}
-		// nodeA
-		try {
-			port = 7281;
-			clientSocket = new Socket(address, port);
-		} catch (Exception e) {
+            // e.printStackTrace();
+            logger.info("wrong port");
+        }
+        // nodeA
+        try {
+            port = 7281;
+            clientSocket = new Socket(address, port);
+        } catch (Exception e) {
 
-			// e.printStackTrace();
-			logger.info("wrong port");
-		}
-		// nodeB
-		try {
-			int port = 7384;
-			// nodeC
-			clientSocket = new Socket(address, port);
-		} catch (Exception e) {
-			logger.info("wrong port");
-			// e.printStackTrace();
-		}
-		// node C
-		try {
-			int port = 7484;
-			// nodeC
-			clientSocket = new Socket(address, port);
-		} catch (Exception e) {
-			logger.info("wrong port");
-			// e.printStackTrace();
+            // e.printStackTrace();
+            logger.info("wrong port");
+        }
+        // nodeB
+        try {
+            int port = 7384;
+            // nodeC
+            clientSocket = new Socket(address, port);
+        } catch (Exception e) {
+            logger.info("wrong port");
+            // e.printStackTrace();
+        }
+        // node C
+        try {
+            int port = 7484;
+            // nodeC
+            clientSocket = new Socket(address, port);
+        } catch (Exception e) {
+            logger.info("wrong port");
+            // e.printStackTrace();
 
-			// node D
-		}
-	}
+            // node D
+        }
+    }
 
-	public static void executeReadOperation() {
-		try {
+    public static void executeReadOperation() {
+        try {
 
-			// create builder for 'read request'
-			Command.Builder readBuilder = Command.newBuilder();
-			readBuilder.setOperation(OperationType.READ);
-			readBuilder.setKey("test");
-			Command readCommand = readBuilder.build();
-			readCommand.writeDelimitedTo(clientSocket.getOutputStream());
+            // create builder for 'read request'
+            Command.Builder readBuilder = Command.newBuilder();
+            readBuilder.setOperation(OperationType.READ);
+            readBuilder.setKey("test");
+            Command readCommand = readBuilder.build();
+            readCommand.writeDelimitedTo(clientSocket.getOutputStream());
 
-			M.Response readResponse = M.Response
-					.parseDelimitedFrom(clientSocket.getInputStream());
+            M.Response readResponse = M.Response
+                    .parseDelimitedFrom(clientSocket.getInputStream());
 
-			logger.info("Response of command of type: '"
-					+ readResponse.getOperation() + "'' for key='"
-					+ readCommand.getKey() + "' and value='"
-					+ readResponse.getValue());
+            logger.info("Response of command of type: '"
+                    + readResponse.getOperation() + "'' for key='"
+                    + readCommand.getKey() + "' and value='"
+                    + readResponse.getValue());
 
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        } catch (UnknownHostException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-	public static void executeCreateOperation(String id) {
+    public static void executeCreateOperation(String id) {
 
-		try {
+        try {
 
-			// create builder for 'create request'
-			Command.Builder createBuilder = Command.newBuilder();
-			createBuilder.setOperation(OperationType.UPDATEORCREATE);
-			// with hash, but seems to make no difference
-			// createBuilder.setKey("test" + id);
-			createBuilder.setKey(Integer.toString(Integer.toString(
-					(int) Math.floor((Math.random() * 500) + 1)).hashCode()));
-			createBuilder.setValue("someValue");
-			createBuilder.setId(id);
-			Command createCommand = createBuilder.build();
-			LatencyMeasurementLogEvent logEvent = new LatencyMeasurementLogEvent();
-			logEvent.setCommandId(id);
-			logEvent.setTimestampBegin(new java.util.Date());
-			createCommand.writeDelimitedTo(clientSocket.getOutputStream());
+            // create builder for 'create request'
+            Command.Builder createBuilder = Command.newBuilder();
+            createBuilder.setOperation(OperationType.UPDATEORCREATE);
+            // with hash, but seems to make no difference
+            // createBuilder.setKey("test" + id);
+            createBuilder.setKey(Integer.toString(Integer.toString(
+                    (int) Math.floor((Math.random() * 500) + 1)).hashCode()));
+            createBuilder.setValue("someValue");
+            createBuilder.setId(id);
+            Command createCommand = createBuilder.build();
+            LatencyMeasurementLogEvent logEvent = new LatencyMeasurementLogEvent();
+            logEvent.setCommandId(id);
+            logEvent.setTimestampBegin(new java.util.Date());
+            createCommand.writeDelimitedTo(clientSocket.getOutputStream());
 
-			// receive response
-			M.Response createResponse = M.Response
-					.parseDelimitedFrom(clientSocket.getInputStream());
-			logEvent.setTimestampEnd(new java.util.Date());
-			logger.info(LATENCY_MARKER, logEvent.toCsv(begin));
+            // receive response
+            M.Response createResponse = M.Response
+                    .parseDelimitedFrom(clientSocket.getInputStream());
+            logEvent.setTimestampEnd(new java.util.Date());
+            logger.info(LATENCY_MARKER, logEvent.toCsv(begin));
 
-			logger.info("Response of command of type: '"
-					+ createResponse.getOperation() + "' for key='"
-					+ createCommand.getKey() + "' and value='"
-					+ createResponse.getValue() + "' was found in input stream");
+            logger.info("Response of command of type: '"
+                    + createResponse.getOperation() + "' for key='"
+                    + createCommand.getKey() + "' and value='"
+                    + createResponse.getValue() + "' was found in input stream");
 
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        } catch (UnknownHostException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }
