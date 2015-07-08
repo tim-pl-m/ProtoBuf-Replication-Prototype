@@ -48,7 +48,6 @@ public class SyncCommandDispatcher implements ICommandDispatcher {
 			targetNode = configAccessor.getNodeByLabel(repLink.getTarget()
 					.toString());
 			this.socket = new Socket(targetNode.getIpadress(), targetNode.getPort());
-			this.socket.setReuseAddress(true);
 			this.oStream = socket.getOutputStream();
 			this.iStream = socket.getInputStream();
 

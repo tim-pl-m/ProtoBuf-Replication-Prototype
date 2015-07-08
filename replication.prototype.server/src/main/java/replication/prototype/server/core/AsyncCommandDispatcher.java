@@ -49,7 +49,6 @@ public class AsyncCommandDispatcher implements ICommandDispatcher {
 
 		};
 		Thread taskThread = new Thread(task); 
-		taskThread.setDaemon(true);
 		taskThread.start();
 
 	}

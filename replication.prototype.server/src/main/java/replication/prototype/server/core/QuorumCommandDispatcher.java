@@ -76,7 +76,7 @@ public class QuorumCommandDispatcher implements ICommandDispatcher {
                     })));
 
     // start every thread
-    tasks.forEach(t -> { t.setDaemon(true); t.start();});
+    tasks.forEach(t -> {  t.start();});
 
     boolean quorumSatisfied = false;
     long time = System.currentTimeMillis();

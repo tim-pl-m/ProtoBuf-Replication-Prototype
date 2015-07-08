@@ -132,16 +132,17 @@ public class CommandReceiver implements ICommandReceiver {
           .collect(Collectors.toList());
     } else {
       logger.debug("Our own replication path will be used.");
-      return this. currentServer.getReplicationPath().getLink().stream()
+      return this.currentServer.getReplicationPath().getLink().stream()
           .filter(t -> t.getSrc().equals(this.thisNode.getLabel())).collect(Collectors.toList());
     }
   }
 
   @Override
   public void startListening() {
+    boolean canShutdown = false;
 
     // outer loop for creating socket connections to several clients
-    while (true) {
+    while (true && !canShutdown) {
 
       try (Socket connectionSocket = this.socket.accept()) {
 
@@ -213,12 +214,13 @@ public class CommandReceiver implements ICommandReceiver {
         };
 
         Thread tfsc = new Thread(threadForSocketConnection);
-        tfsc.setDaemon(true);
         tfsc.run();
 
 
       } catch (IOException e1) {
         logger.error("Error accepting socket.");
+        canShutdown = true;
+
       }
     }
 
