@@ -59,11 +59,6 @@ public class DeployHelper {
 		this.filePath = filePath;
 	}
 
-	public DeployHelper() {
-	}
-
-	// login to AWS
-
 	public static void main(String[] args) throws Exception {
 
 		DeployHelper helper = null;
@@ -71,11 +66,63 @@ public class DeployHelper {
 		if (args.length > 0) {
 			helper = new DeployHelper("src" + s + "main" + s + "resources" + s
 					+ "" + args[0]);
-		} else {
-			helper = new DeployHelper();
+			helper.generalInitializatiom();
+			if (args.length == 1) {
+				helper.deploy();
+
+			}
+			if (args.length > 1) {
+				if (args[1].equals("verify")) {
+					// verify deploy
+					helper.verify();
+				}
+
+			}
 		}
-		helper.generalInitializatiom();
-		helper.deploy();
+
+	}
+
+	private void verify() throws Exception {
+		if (this.config.getReplicationnodes().getNode().stream()
+				.anyMatch(n -> n.getIpadress() == null)) {
+			this.initializationForOnlineDeployment();
+
+		}
+		logger.debug("Config file is {}", this.filePath);
+		Region currentRegion = null;
+
+		try {
+			for (NodeType n : config.getReplicationnodes().getNode().stream()
+					.filter(n -> n.getIpadress() == null)
+					.collect(Collectors.toList())) {
+
+				n.setWebserverport(8080);
+				logger.debug("Node region is {}", n.getLocation());
+
+				currentRegion = Region.getRegion(Regions.valueOf(n
+						.getLocation().name()));
+				ec2.setRegion(currentRegion);
+
+				getInstanceAdressesForRegion(currentRegion);
+				n.setIpadress(this.getNextIpAddress(currentRegion)
+						.getPublicDnsName());
+				logger.debug(
+						"Node with label {} will have public DNS {} and listening on port {}",
+						n.getLabel(), n.getIpadress(), n.getPort());
+
+			}
+
+			// verify config
+			for (NodeType n : config.getReplicationnodes().getNode()) {
+				verifyNode(n, config, n.getWebserverport());
+			}
+
+		} catch (AmazonServiceException ase) {
+			System.out.println("Caught Exception: " + ase.getMessage());
+			System.out.println("Reponse Status Code: " + ase.getStatusCode());
+			System.out.println("Error Code: " + ase.getErrorCode());
+			System.out.println("Request ID: " + ase.getRequestId());
+		}
 
 	}
 

@@ -36,11 +36,11 @@ public class Client {
 			breakInMilliseconds = Long.parseLong(args[1]);
 		} catch (Exception e) {
 			System.out.println("incomplete arguments");
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		testPort();
 		// executeCreateOperation("test");
-		executeReadOperation();
+		// executeReadOperation();
 		int iterations = 500;
 		long startTime = System.currentTimeMillis();
 
