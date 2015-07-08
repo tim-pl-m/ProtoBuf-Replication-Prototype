@@ -24,16 +24,20 @@ public class Client {
 	static Date begin = null;
 	static int port = 0;
 
-	static String address = "";
+	static String address = "localhost";
 
-	static long breakInMilliseconds = 1000;
-
-	// static String address = "localhost";
+	static long breakInMilliseconds = 0;
 
 	public static void main(String[] args) throws IOException,
 			InterruptedException {
 
-		address = args[0];
+		try {
+			address = args[0];
+			breakInMilliseconds = Long.parseLong(args[1]);
+		} catch (Exception e) {
+			System.out.println("incomplete arguments");
+			e.printStackTrace();
+		}
 		testPort();
 		// executeCreateOperation("test");
 		executeReadOperation();
