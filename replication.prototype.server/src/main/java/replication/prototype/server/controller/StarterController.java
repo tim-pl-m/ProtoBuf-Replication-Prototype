@@ -41,7 +41,7 @@ public class StarterController {
 
   @RequestMapping(value = "/getCurrentTime", method = RequestMethod.GET,
       produces = "application/json")
-  public long setOffset() {
+  public long getCurrentTime() {
     return new java.util.Date().getTime();
   }
 
@@ -56,6 +56,8 @@ public class StarterController {
         logger.debug("Another server instance seems to be running.");
         this.server.setConfig(config);
         this.server.rebootWithNewConfig();
+        logger.debug("Successfully rebooted server with new config.");
+
       } else {
         this.server = new Server(config, thisNode, this.timeOffset);
         this.server.boot();

@@ -32,7 +32,7 @@ public class CommitLogEvent {
   }
 
   public String toCsv() {
-    return this.node + ", " + this.commandId + ", " + this.timestamp.getTime() + this.offset + ", " + this.operation;
+    return this.node + ", " + this.commandId + ", " + (this.timestamp.getTime() - this.offset) + ", " + this.operation;
   }
 
   public String toXml() {

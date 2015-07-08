@@ -44,6 +44,7 @@ public class DeployHelper {
 			.getName());
 	static final String s = System.getProperty("file.separator");
 	private AmazonEC2 ec2;
+	private TimeSynchronizer timeSync = new TimeSynchronizer();
 	/**
 	 * This class variable stores all addresses of available e2c regions per
 	 * region.
@@ -190,18 +191,11 @@ public class DeployHelper {
 		Boolean result = restTemplate.getForObject(runningUrl, Boolean.class);
 		System.out.println(result);
 		// shutdown Server if it is running
-		if (result) {
-			// /shutDownServer
-			String stopUrl = "http://" + n.getIpadress() + ":" + port
-					+ "/shutDownServer";
-
-			// debug: check connection and url-parsing
-			System.out.println(stopUrl);
-			result = restTemplate.getForObject(stopUrl, Boolean.class);
-			System.out.println(result);
-		}
+		 this.timeSync.determineAndSetOffsetForHost("http://" + n.getIpadress() + ":" + port);
+	
 
 		// start server with define config(strategy)
+		
 		System.out.println(startUrl);
 		restTemplate.getMessageConverters().add(
 				new Jaxb2RootElementHttpMessageConverter());
