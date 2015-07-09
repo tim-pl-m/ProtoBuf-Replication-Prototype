@@ -13,25 +13,27 @@ import replication.prototype.server.util.ReplicationConfigAccessor;
 public class CommandDispatcherFactory implements ICommandDispatcherFactory {
 
 	private ReplicationConfigAccessor configAccessor;
+	private IConnectionManager connectionManager;
 	
-	public CommandDispatcherFactory(ReplicationConfigAccessor configAccessor)
+	public CommandDispatcherFactory(IConnectionManager connectionManager, ReplicationConfigAccessor configAccessor)
 	{
 		this.configAccessor = configAccessor;
+		this.connectionManager = connectionManager;
 	}
 	
 	@Override
 	public ICommandDispatcher createSyncDispatcher(ReplicationLinkType repLink) throws IOException {
-		return new SyncCommandDispatcher(repLink, this.configAccessor);
+		return new SyncCommandDispatcher(this.connectionManager, repLink, this.configAccessor);
 	}
 
 	@Override
 	public ICommandDispatcher createAsyncDispatcher(ReplicationLinkType repLink) throws IOException {
-		return new AsyncCommandDispatcher(repLink, this.configAccessor);
+		return new AsyncCommandDispatcher(this.connectionManager, repLink, this.configAccessor);
 	}
 
 	@Override
 	public ICommandDispatcher createQuorumDispatcher(QuorumReplicationLinkType repLink) {
-		return new QuorumCommandDispatcher(repLink, this.configAccessor);
+		return new QuorumCommandDispatcher(this.connectionManager, repLink, this.configAccessor);
 	}
 
 

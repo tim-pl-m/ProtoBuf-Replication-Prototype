@@ -40,14 +40,14 @@ public class SyncCommandDispatcher implements ICommandDispatcher {
 
 	private ReplicationLinkType repLink;
 
-	public SyncCommandDispatcher(ReplicationLinkType repLink,
+	public SyncCommandDispatcher(IConnectionManager connectionManager, ReplicationLinkType repLink,
 			ReplicationConfigAccessor configAccessor) throws IOException {
 
 		try {
 			this.repLink = repLink;
 			targetNode = configAccessor.getNodeByLabel(repLink.getTarget()
 					.toString());
-			this.socket = new Socket(targetNode.getIpadress(), targetNode.getPort());
+			this.socket = connectionManager.getSocketFor(targetNode.getIpadress(), targetNode.getPort());
 			this.oStream = socket.getOutputStream();
 			this.iStream = socket.getInputStream();
 
@@ -65,9 +65,7 @@ public class SyncCommandDispatcher implements ICommandDispatcher {
 		command.writeDelimitedTo(this.oStream);
 		this.response = Response.parseDelimitedFrom(iStream);
 		logger.debug("Received a response from {}", this.targetNode.getLabel());
-		this.oStream.close();
-		this.iStream.close();
-		this.socket.close();
+
 	}
 
 	@Override

@@ -22,10 +22,10 @@ public class AsyncCommandDispatcher implements ICommandDispatcher {
 	static final Logger logger = LogManager
 			.getLogger(AsyncCommandDispatcher.class.getName());
 
-	public AsyncCommandDispatcher(ReplicationLinkType repLink,
+	public AsyncCommandDispatcher(IConnectionManager connectionManager, ReplicationLinkType repLink,
 			ReplicationConfigAccessor configAccessor) throws IOException {
 		this.repLink = repLink;
-		this.syncCommandDispatcher = new SyncCommandDispatcher(repLink,
+		this.syncCommandDispatcher = new SyncCommandDispatcher(connectionManager, repLink,
 				configAccessor);
 	}
 

@@ -36,18 +36,19 @@ public class CommandReceiver implements ICommandReceiver {
   private ServerSocket socket;
   private Map<String, String> map;
   private NodeType thisNode;
-
+  private ICommandDispatcherFactory factory;
   static final Marker COMMIT_MARKER = MarkerManager.getMarker("COMMIT");
   static final Logger logger = LogManager.getLogger(CommandReceiver.class.getName());
   private CommitLogEventCreator commitLogEventCreator;
 
-  public CommandReceiver(NodeType thisNode, Map<String, String> map, Server currentServer)
+  public CommandReceiver(IConnectionManager connectionManager, NodeType thisNode, Map<String, String> map, Server currentServer)
       throws IOException, JAXBException {
     this.thisNode = thisNode;
     this.socket = new ServerSocket(thisNode.getPort());
     this.map = map;
     this.currentServer = currentServer;
     this.commitLogEventCreator = new CommitLogEventCreator();
+    this.factory = new CommandDispatcherFactory(connectionManager, this.currentServer.getConfigAccessor());
   }
 
   /**
@@ -91,8 +92,8 @@ public class CommandReceiver implements ICommandReceiver {
       logger.debug("Command is sent to the coordinator");
 
       CommandCoordinator coordinator =
-          new CommandCoordinator(this.getRelevantReplicationLinks(command), thisNode,
-              new CommandDispatcherFactory(this.currentServer.getConfigAccessor()));
+          new CommandCoordinator(this.getRelevantReplicationLinks(command), thisNode, this.factory
+              );
       coordinator.coordinateCommand(command);
 
       // create a simple response, will be changed later...

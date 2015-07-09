@@ -9,7 +9,6 @@
 				qsize="2">
 				<qparticipant name="nodeB" />
 				<qparticipant name="nodeC" />
-				<qparticipant name="nodeD" />
 			</link>
 		</path>
 		<path start="nodeB">
@@ -17,7 +16,6 @@
 				qsize="2">
 				<qparticipant name="nodeA" />
 				<qparticipant name="nodeC" />
-				<qparticipant name="nodeD" />
 			</link>
 		</path>
 		<path start="nodeC">
@@ -25,7 +23,6 @@
 				qsize="2">
 				<qparticipant name="nodeA" />
 				<qparticipant name="nodeB" />
-				<qparticipant name="nodeD" />
 			</link>
 		</path>
 		

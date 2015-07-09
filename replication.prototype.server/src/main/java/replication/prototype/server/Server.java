@@ -11,7 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import replication.prototype.server.util.ReplicationConfigAccessor;
+import replication.prototype.server.core.ConnectionManager;
 import replication.prototype.server.core.ICommandReceiver;
+import replication.prototype.server.core.IConnectionManager;
 import replication.prototype.server.core.ServerIdentity;
 import replication.prototype.server.core.CommandReceiver;
 import replication.prototype.server.environment.ReplicationConfigurationType;
@@ -34,6 +36,7 @@ public class Server {
 
   static final Logger logger = LogManager.getLogger(Server.class.getName());
 
+  private IConnectionManager connectionManager = new ConnectionManager();
   private ReplicationConfigurationType config;
   private ServerIdentity identity;
   private ReplicationConfigAccessor configAccessor;
@@ -119,7 +122,7 @@ public class Server {
    */
   private void buildAndRunCommandReceiver() throws IOException, JAXBException {
     this.receiver =
-        new CommandReceiver(this.identity.getServerIdentity(), this.synchrnoizedMap, this);
+        new CommandReceiver(connectionManager, this.identity.getServerIdentity(), this.synchrnoizedMap, this);
 
     Runnable task = () -> {
       try {
