@@ -36,18 +36,19 @@ public class CommandReceiver implements ICommandReceiver {
   private ServerSocket socket;
   private Map<String, String> map;
   private NodeType thisNode;
-
+  private ICommandDispatcherFactory factory;
   static final Marker COMMIT_MARKER = MarkerManager.getMarker("COMMIT");
   static final Logger logger = LogManager.getLogger(CommandReceiver.class.getName());
   private CommitLogEventCreator commitLogEventCreator;
 
-  public CommandReceiver(NodeType thisNode, Map<String, String> map, Server currentServer)
+  public CommandReceiver(IConnectionManager connectionManager, NodeType thisNode, Map<String, String> map, Server currentServer)
       throws IOException, JAXBException {
     this.thisNode = thisNode;
     this.socket = new ServerSocket(thisNode.getPort());
     this.map = map;
     this.currentServer = currentServer;
     this.commitLogEventCreator = new CommitLogEventCreator();
+    this.factory = new CommandDispatcherFactory(connectionManager, this.currentServer.getConfigAccessor());
   }
 
   /**
@@ -91,8 +92,8 @@ public class CommandReceiver implements ICommandReceiver {
       logger.debug("Command is sent to the coordinator");
 
       CommandCoordinator coordinator =
-          new CommandCoordinator(this.getRelevantReplicationLinks(command), thisNode,
-              new CommandDispatcherFactory(this.currentServer.getConfigAccessor()));
+          new CommandCoordinator(this.getRelevantReplicationLinks(command), thisNode, this.factory
+              );
       coordinator.coordinateCommand(command);
 
       // create a simple response, will be changed later...
@@ -132,16 +133,17 @@ public class CommandReceiver implements ICommandReceiver {
           .collect(Collectors.toList());
     } else {
       logger.debug("Our own replication path will be used.");
-      return this. currentServer.getReplicationPath().getLink().stream()
+      return this.currentServer.getReplicationPath().getLink().stream()
           .filter(t -> t.getSrc().equals(this.thisNode.getLabel())).collect(Collectors.toList());
     }
   }
 
   @Override
   public void startListening() {
+    boolean canShutdown = false;
 
     // outer loop for creating socket connections to several clients
-    while (true) {
+    while (true && !canShutdown) {
 
       try (Socket connectionSocket = this.socket.accept()) {
 
@@ -213,12 +215,13 @@ public class CommandReceiver implements ICommandReceiver {
         };
 
         Thread tfsc = new Thread(threadForSocketConnection);
-        tfsc.setDaemon(true);
         tfsc.run();
 
 
       } catch (IOException e1) {
         logger.error("Error accepting socket.");
+        canShutdown = true;
+
       }
     }
 

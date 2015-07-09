@@ -118,7 +118,7 @@ public class CommandCoordinator implements ICommandCoordinator {
     // extend the given command by the initiator id
     // if no id is given
     if (!command.hasInitiator()) {
-      builder.setInitiator(CommandCoordinator.this.thisNode.getLabel());
+      builder.setInitiator(this.thisNode.getLabel());
     } else {
       builder.setInitiator(command.getInitiator());
     }

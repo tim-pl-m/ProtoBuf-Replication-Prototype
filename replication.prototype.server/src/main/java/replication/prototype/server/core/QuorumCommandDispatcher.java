@@ -34,13 +34,14 @@ public class QuorumCommandDispatcher implements ICommandDispatcher {
   private ReplicationConfigAccessor configAccessor;
   private SyncCommandDispatcher[] syncDispatchers;
   private int syncDispatchersCounter = 0;
+  private IConnectionManager connectionManager;
 
-  public QuorumCommandDispatcher(QuorumReplicationLinkType repLink,
+  public QuorumCommandDispatcher(IConnectionManager connectionManager, QuorumReplicationLinkType repLink,
       ReplicationConfigAccessor configAccessor) {
     this.repLink = repLink;
     this.configAccessor = configAccessor;
     this.syncDispatchers = new SyncCommandDispatcher[repLink.getQparticipant().size()];
-
+    this.connectionManager = connectionManager;
   }
 
 
@@ -76,7 +77,7 @@ public class QuorumCommandDispatcher implements ICommandDispatcher {
                     })));
 
     // start every thread
-    tasks.forEach(t -> { t.setDaemon(true); t.start();});
+    tasks.forEach(t -> {  t.start();});
 
     boolean quorumSatisfied = false;
     long time = System.currentTimeMillis();
@@ -118,7 +119,8 @@ public class QuorumCommandDispatcher implements ICommandDispatcher {
     adoptedRepLink.setSrc(repLink.getSrc());
     adoptedRepLink.setTarget(qp.getName());
     adoptedRepLink.setType(CommunicationEnumType.SYNC);
-    return new SyncCommandDispatcher(adoptedRepLink, this.configAccessor);
+  
+    return new SyncCommandDispatcher(connectionManager, adoptedRepLink, this.configAccessor);
   }
 
 

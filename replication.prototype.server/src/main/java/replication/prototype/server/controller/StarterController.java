@@ -1,5 +1,6 @@
 package replication.prototype.server.controller;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,6 +58,13 @@ public class StarterController {
         logger.debug("Another server instance seems to be running.");
         this.server.setConfig(config);
         this.server.rebootWithNewConfig();
+        boolean resultDeletion = new File("commits.log").delete();
+        if(resultDeletion) {
+          logger.debug("Successfully removed old log file.");
+        } else {
+          logger.debug("Could not remove old log file.");
+
+        }
         logger.debug("Successfully rebooted server with new config.");
 
       } else {
